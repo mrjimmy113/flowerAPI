@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<global-method-security
+		pre-post-annotations="enabled" />
+
+	<beans:bean id="webexpressionHandler"
+		class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+	</beans:bean>
+
+	<beans:bean id="restServicesEntryPoint"
+		class="nano.filter.RestAuthenticationEntryPoint" />
+	<beans:bean id="customAccessDeniedHandler"
+		class="nano.filter.CustomAccessDeniedHandler" />
+
+	<beans:bean id="jwtAuthenticationFilter"
+		class="nano.filter.JwtAuthenticationTokenFilter">
+		<beans:property name="authenticationManager"
+			ref="authenticationManager" />
+	</beans:bean>
+
+	<http pattern="/login" security="none" />
+
+	<http pattern="/**" auto-config="false" use-expressions="true"
+		create-session="stateless" entry-point-ref="restServicesEntryPoint">
+		<!--<intercept-url pattern="/event/**"
+			access="hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMP')" />
+		<intercept-url pattern="/item/**"
+			access="hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMP')" />
+		<intercept-url pattern="/flower/**"
+			access="hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMP')" />-->
+		<custom-filter position="FORM_LOGIN_FILTER"
+			ref="jwtAuthenticationFilter" />
+		<access-denied-handler
+			ref="customAccessDeniedHandler" />
+		<csrf disabled="true" />
+	</http>
+
+	<authentication-manager
+		alias="authenticationManager">
+		<authentication-provider
+			user-service-ref="userDetailsServiceImpl">
+		</authentication-provider>
+	</authentication-manager>
+
+
+
+</beans:beans>
