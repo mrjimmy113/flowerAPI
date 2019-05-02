@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import nano.dto.GetAllDTO;
 import nano.entity.Order;
-import nano.entity.Product;
 import nano.repository.OrderRepository;
 
 @Service

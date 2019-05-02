@@ -4,7 +4,6 @@ import java.util.List;
 
 import nano.dto.GetAllDTO;
 import nano.entity.Order;
-import nano.entity.Product;
 
 public interface OrderService  {
 	
