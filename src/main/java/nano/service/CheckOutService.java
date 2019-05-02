@@ -1,0 +1,42 @@
+package nano.service;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import nano.entity.Order;
+import nano.entity.OrderDetail;
+import nano.repository.OrderRepository;
+
+public class CheckOutService {
+
+private OrderRepository orderRepository;
+	
+	@Autowired
+	public void setProductRepository(OrderRepository orderRepository) {
+		this.orderRepository = orderRepository;
+	}
+	
+	public void checkOut(Order order, List<OrderDetail> details) { 
+		Order orders = new Order();
+		for(OrderDetail orderDetail : details) {
+			orderDetail.setOrder(orders);
+        	orderDetail.setOrderDetailsStatus("Processing"); 
+		}
+		orders.setDetail(details);
+		orders.setOrderDate(new Date());
+		orders.setOrderStatus("Processing");
+		orders.setPaidDate(order.getPaidDate());
+		orders.setPaymentType(order.getPaymentType());
+		orders.setShipAddress(order.getShipAddress());
+		orders.setShipCity(order.getShipCity());
+		orders.setShipCountry(order.getShipCountry());
+		orders.setShipName(order.getShipName());
+		orders.setShippedDate(order.getShippedDate());
+		orders.setShippingFree(order.getShippingFree());
+		orderRepository.save(orders);
+	}
+	
+	
+}
