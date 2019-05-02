@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nano.entity.Evaluate;
+import nano.exception.ResourceNotFoundException;
 import nano.repository.EvaluateRepository;
 
 @Service
@@ -29,9 +30,9 @@ public class EvaluateServiceImpl implements EvaluateService {
 
 	@Transactional
 	@Override
-	public Evaluate one(int id) {
+	public Evaluate one(int id) throws ResourceNotFoundException{
 		return repository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Did not find Evaluate id - " + id));
+				.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	@Transactional

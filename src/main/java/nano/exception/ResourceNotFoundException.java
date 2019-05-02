@@ -1,4 +1,4 @@
-package nano.exception.java;
+package nano.exception;
 
 /**
  * @author Le Ngo Minh <br/>

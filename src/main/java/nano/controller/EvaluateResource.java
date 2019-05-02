@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import nano.entity.Evaluate;
+import nano.exception.ResourceNotFoundException;
 import nano.service.EvaluateService;
 
 @RestController
@@ -33,7 +34,7 @@ public class EvaluateResource {
 	}
 
 	@GetMapping("get/{id}")
-	public Evaluate one(@PathVariable("id") int id) {
+	public Evaluate one(@PathVariable("id") int id) throws ResourceNotFoundException {
 			return service.one(id);
 	}
 	

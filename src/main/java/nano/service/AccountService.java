@@ -3,6 +3,7 @@ package nano.service;
 import java.util.List;
 
 import nano.entity.Account;
+import nano.exception.ResourceNotFoundException;
 
 public interface AccountService  {
 	String login(String username, String password);
@@ -13,7 +14,7 @@ public interface AccountService  {
 
 	Account newAccount(Account newAccount);
 
-	Account one(int id);
+	Account one(int id) throws ResourceNotFoundException;
 
 	Account replaceAccount(Account newAccount, int id);
 

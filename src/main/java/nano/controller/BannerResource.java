@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import nano.entity.Banner;
+import nano.exception.ResourceNotFoundException;
 import nano.service.BannerService;
 
 @RestController
@@ -35,7 +36,7 @@ public class BannerResource {
 	}
 
 	@GetMapping("get/{id}")
-	public Banner one(@PathVariable("id") int id) {
+	public Banner one(@PathVariable("id") int id) throws ResourceNotFoundException{
 		return service.one(id);
 	}
 

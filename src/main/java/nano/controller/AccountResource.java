@@ -21,6 +21,7 @@ import nano.dto.AccountDTO;
 import nano.dto.TokenDTO;
 import nano.entity.Account;
 import nano.service.AccountService;
+import nano.exception.ResourceNotFoundException;
 
 @RestController
 public class AccountResource {
@@ -58,7 +59,7 @@ public class AccountResource {
 	}
 
 	@GetMapping("get/{id}")
-	public Account one(@PathVariable("id") int id) {
+	public Account one(@PathVariable("id") int id) throws ResourceNotFoundException {
 			return service.one(id);
 	}
 	

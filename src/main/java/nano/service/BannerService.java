@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.validation.BindingResult;
 
 import nano.entity.Banner;
+import nano.exception.ResourceNotFoundException;
 
 public interface BannerService {
 
@@ -12,7 +13,7 @@ public interface BannerService {
 
 	Banner newBanner(Banner newBanner, BindingResult result);
 
-	Banner one(int id);
+	Banner one(int id) throws ResourceNotFoundException;
 
 	void deleteBanner(int id);
 

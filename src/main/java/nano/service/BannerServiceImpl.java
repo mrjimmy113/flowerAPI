@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import nano.entity.Banner;
+import nano.exception.ResourceNotFoundException;
 import nano.repository.BannerRepository;
 
 @Service
@@ -59,9 +60,9 @@ public class BannerServiceImpl implements BannerService{
 
 	@Transactional
 	@Override
-	public Banner one(int id) {
+	public Banner one(int id) throws ResourceNotFoundException{
 		return repository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Did not find Banner id - " + id));
+				.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	@Transactional

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import nano.entity.Account;
 import nano.repository.AccountRepository;
+import nano.exception.ResourceNotFoundException;
 
 @Service
 public class AccountServiceImpl implements AccountService{
@@ -47,9 +48,9 @@ public class AccountServiceImpl implements AccountService{
 
 	@Transactional
 	@Override
-	public Account one(int id) {
+	public Account one(int id) throws ResourceNotFoundException {
 		return repository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Did not find Account id - " + id));
+				.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	@Transactional
