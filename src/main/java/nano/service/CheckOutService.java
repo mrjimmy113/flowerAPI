@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import nano.entity.Order;
 import nano.entity.OrderDetail;
 import nano.repository.OrderRepository;
+import nano.utils.HelperSendEmail;
 
 public class CheckOutService {
 
@@ -18,6 +19,7 @@ private OrderRepository orderRepository;
 		this.orderRepository = orderRepository;
 	}
 	
+	
 	public void checkOut(Order order, List<OrderDetail> details) { 
 		Order orders = new Order();
 		for(OrderDetail orderDetail : details) {
@@ -25,6 +27,7 @@ private OrderRepository orderRepository;
         	orderDetail.setOrderDetailsStatus("Processing"); 
 		}
 		orders.setDetail(details);
+		orders.setOrderNo(order.getOrderDate().getTime());
 		orders.setOrderDate(new Date());
 		orders.setOrderStatus("Processing");
 		orders.setPaidDate(order.getPaidDate());
@@ -36,6 +39,9 @@ private OrderRepository orderRepository;
 		orders.setShippedDate(order.getShippedDate());
 		orders.setShippingFree(order.getShippingFree());
 		orderRepository.save(orders);
+		
+		HelperSendEmail helper = new HelperSendEmail();
+		helper.sendEmailOrder("", orders.getOrderNo()); // thêm emailCustomer
 	}
 	
 	
