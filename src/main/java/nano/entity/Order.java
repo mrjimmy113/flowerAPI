@@ -31,6 +31,9 @@ public class Order implements Serializable {
 	@Column(name="customer_id")
     private int customerId;
 	
+	@Column(name="orderNo")
+    private long orderNo;
+	
 	@Column(name="order_date")
 	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date orderDate;
@@ -148,6 +151,16 @@ public class Order implements Serializable {
 	}
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+	
+	
+
+	public long getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(long orderNo) {
+		this.orderNo = orderNo;
 	}
 
 	@Override
