@@ -1,5 +1,6 @@
 package nano.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,16 +34,16 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Transactional
 	@Override
-	public List<Order> searchByNamePage(String name, int pageNum) {
+	public List<Order> searchByNamePage(Long from,Long to, int pageNum) {
 		Pageable pageable = PageRequest.of(pageNum -1, PAGEMAXSIZE);
-		Page<Order> page = orderRepository.findByProductNameContaining(name, pageable);		
+		Page<Order> page = orderRepository.findByOrderDateBetween(new Date(from), new Date(to), pageable);		
 		return page.getContent();
 	}
 	@Transactional
 	@Override
-	public GetAllDTO<Order> findAllItem(String searchTerm) {
+	public GetAllDTO<Order> findAllItem(Long from,Long to) {
 		Pageable pageable = PageRequest.of(0, PAGEMAXSIZE);
-		Page<Order> page = orderRepository.findByProductNameContaining(searchTerm, pageable);
+		Page<Order> page = orderRepository.findByOrderDateBetween(new Date(from), new Date(to), pageable);
 		GetAllDTO<Order> dto = new GetAllDTO<Order>();
 		dto.setMaxPage(page.getTotalPages());
 		dto.setList(page.getContent());
@@ -72,5 +73,6 @@ public class OrderServiceImpl implements OrderService {
 	public void deleteById(int id) {
 		orderRepository.deleteById(id);;
 	}
+
 
 }

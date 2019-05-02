@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import nano.dto.GetAllDTO;
 import nano.entity.Order;
 import nano.service.OrderService;
 
 
 @RestController
-@RequestMapping("/orders")
 public class OrderResource {
 	
 	OrderService orderService;
@@ -31,14 +31,14 @@ public class OrderResource {
 	}
 	
 	@GetMapping("/orders")
-	public List<Order> getAllorder() {
-		return orderService.findAll();
+	public GetAllDTO<Order> getAllorder(@RequestParam Long from, @RequestParam Long to) {
+		return orderService.findAllItem(from, to);
 	}
 	
-	@GetMapping(value = "/search")
-	public List<Order> searchWithPage(@RequestParam String searchTerm, @RequestParam int pageNum) {
+	@GetMapping(value = "/orders/search")
+	public List<Order> searchWithPage(@RequestParam Long from,@RequestParam Long to, @RequestParam int pageNum) {
 		List<Order> orders = null;		
-		orders = orderService.searchByNamePage(searchTerm, pageNum);
+		orders = orderService.searchByNamePage(from, to, pageNum);
 		return orders;
 	}
 	

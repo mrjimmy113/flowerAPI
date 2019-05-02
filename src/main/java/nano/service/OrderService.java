@@ -11,6 +11,6 @@ public interface OrderService  {
 	 Order findById(int id);	
 	 void save(Order order);	
 	 void deleteById(int id);
-	 List<Order> searchByNamePage(String name, int pageNum);
-	 GetAllDTO<Order> findAllItem(String searchTerm);
+	List<Order> searchByNamePage(Long from, Long to, int pageNum);
+	GetAllDTO<Order> findAllItem(Long from, Long to);
 }
