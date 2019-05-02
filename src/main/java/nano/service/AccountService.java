@@ -1,9 +1,21 @@
 package nano.service;
 
+import java.util.List;
+
 import nano.entity.Account;
 
 public interface AccountService  {
 	String login(String username, String password);
 	
 	Account getAccountByUsername(String username);
+	
+	List<Account> all();
+
+	Account newAccount(Account newAccount);
+
+	Account one(int id);
+
+	Account replaceAccount(Account newAccount, int id);
+
+	void deleteAccount(int id);
 }
