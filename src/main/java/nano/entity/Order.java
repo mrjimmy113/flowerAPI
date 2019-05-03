@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -28,8 +30,9 @@ public class Order implements Serializable {
 	@Column(name="order_id")
 	private int orderId;
 	
-	@Column(name="customer_id")
-    private int customerId;
+	@ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name ="account_id")
+    private Account account;
 	
 	@Column(name="orderNo")
     private long orderNo;
@@ -85,12 +88,12 @@ public class Order implements Serializable {
 	}
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
+	}	
+	public Account getAccount() {
+		return account;
 	}
-	public int getCustomerId() {
-		return customerId;
-	}
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 	public Date getOrderDate() {
 		return orderDate;

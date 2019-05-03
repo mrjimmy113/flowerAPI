@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import nano.entity.Account;
 import nano.entity.Order;
 import nano.entity.OrderDetail;
 import nano.repository.OrderRepository;
@@ -22,11 +23,12 @@ private OrderRepository orderRepository;
 	
 	public void checkOut(Order order, List<OrderDetail> details) { 
 		Order orders = new Order();
+		Account account = orders.getAccount();
 		for(OrderDetail orderDetail : details) {
 			orderDetail.setOrder(orders);
-        	orderDetail.setOrderDetailsStatus("Processing"); 
 		}
 		orders.setDetail(details);
+		orders.setAccount(account);
 		orders.setOrderNo(order.getOrderDate().getTime());
 		orders.setOrderDate(new Date());
 		orders.setOrderStatus("Processing");

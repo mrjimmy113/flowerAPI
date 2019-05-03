@@ -40,13 +40,7 @@ public class OrderDetail implements Serializable {
 	
 	@Transient
     private double total;
-	
-	@Column(name="discount")
-	private float discount;
-	
-	@Column(name="order_detail_status")
-	private String orderDetailsStatus;
-		
+			
 	public int getOrderdetailsId() {
 		return orderdetailsId;
 	}
@@ -77,18 +71,6 @@ public class OrderDetail implements Serializable {
 	}
 	public void setUnit(float unit) {
 		this.unit = unit;
-	}
-	public float getDiscount() {
-		return discount;
-	}
-	public void setDiscount(float discount) {
-		this.discount = discount;
-	}
-	public String getOrderDetailsStatus() {
-		return orderDetailsStatus;
-	}
-	public void setOrderDetailsStatus(String orderDetailsStatus) {
-		this.orderDetailsStatus = orderDetailsStatus;
 	}	
 	
 	public double getTotal() {
