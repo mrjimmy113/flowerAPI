@@ -72,4 +72,35 @@ public class AccountServiceImpl implements AccountService{
 		repository.deleteById(id);
 	}
 	
+	@Transactional
+	@Override
+	public boolean checkUsernameExist(String username) {		
+		
+		Account account = new Account();
+		account = repository.findByUsername(username);		
+		
+		if(account != null) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Transactional
+	@Override
+	public boolean updateAccountRole(String username, String role) {
+		
+		Account account = new Account();
+		account = repository.findByUsername(username);
+		
+		if(account != null) {
+			
+			account.setRole(role);
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
 }

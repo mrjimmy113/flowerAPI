@@ -25,29 +25,29 @@ import nano.exception.ResourceNotFoundException;
 
 @RestController
 public class AccountResource {
-	
+
 	@Autowired
 	AccountService service;
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST ,
-			consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = {
+			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
-	public ResponseEntity<TokenDTO> login (@RequestBody AccountDTO dto) {
+	public ResponseEntity<TokenDTO> login(@RequestBody AccountDTO dto) {
 		String token = service.login(dto.getUsername(), dto.getPassword());
 		HttpStatus httpStatus = null;
 		TokenDTO tokenDto = new TokenDTO();
-		if(!token.isEmpty()) {
+		if (!token.isEmpty()) {
 			httpStatus = HttpStatus.OK;
 			tokenDto.setTokenValue(token);
-			
-		}else {
+
+		} else {
 			httpStatus = HttpStatus.BAD_REQUEST;
 		}
-		
-		return new ResponseEntity<TokenDTO>(tokenDto,httpStatus);
-	
+
+		return new ResponseEntity<TokenDTO>(tokenDto, httpStatus);
+
 	}
-	
+
 	@GetMapping("/all")
 	public List<Account> all() {
 		return service.all();
@@ -60,16 +60,26 @@ public class AccountResource {
 
 	@GetMapping("get/{id}")
 	public Account one(@PathVariable("id") int id) throws ResourceNotFoundException {
-			return service.one(id);
+		return service.one(id);
 	}
-	
+
 	@PutMapping("/put/{id}")
 	public Account replaceAccount(@RequestBody Account newAccount, @PathVariable("id") int id) {
-	    return service.replaceAccount(newAccount, id);
-	  }
-	
-	 @DeleteMapping("/delete/{id}")
-	  void deleteAccount(@PathVariable int id) {
-	    service.deleteAccount(id);
-	  }
+		return service.replaceAccount(newAccount, id);
+	}
+
+	@DeleteMapping("/delete/{id}")
+	void deleteAccount(@PathVariable int id) {
+		service.deleteAccount(id);
+	}
+
+	@GetMapping("/checkUsernameExist/{username}")
+	public boolean checkUsernameExist(@PathVariable("username") String username) {
+		return service.checkUsernameExist(username);
+	}
+
+	@GetMapping("/updateAccountRole/{username}&{role}")
+	public boolean updateAccountRole(@PathVariable("username") String username, @PathVariable("role") String role) {
+		return service.updateAccountRole(username, role);
+	}
 }

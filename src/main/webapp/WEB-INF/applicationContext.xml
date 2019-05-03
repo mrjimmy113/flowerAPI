@@ -28,7 +28,6 @@
 		<property name="url"
 			value="jdbc:mysql://localhost:3306/dkm" />
 		<property name="username" value="root" />
-<!-- 		<property name="password" value="123123" /> -->
 		<property name="password" value="1234" />
 	</bean>
 

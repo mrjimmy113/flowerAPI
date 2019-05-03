@@ -19,4 +19,8 @@ public interface AccountService  {
 	Account replaceAccount(Account newAccount, int id);
 
 	void deleteAccount(int id);
+	
+	boolean checkUsernameExist(String username);
+	
+	boolean updateAccountRole(String username, String role);
 }
