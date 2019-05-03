@@ -17,7 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="orders")
@@ -71,8 +70,10 @@ public class Order implements Serializable {
     private String orderStatus;
     
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("order")
     private List<OrderDetail> detail = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<Evaluate> evaluates = new ArrayList<>();
     
     public Order() {
 	}   
@@ -154,10 +155,7 @@ public class Order implements Serializable {
 	}
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
-	}
-	
-	
-
+	}	
 	public long getOrderNo() {
 		return orderNo;
 	}
@@ -165,16 +163,24 @@ public class Order implements Serializable {
 	public void setOrderNo(long orderNo) {
 		this.orderNo = orderNo;
 	}
+	public List<Evaluate> getEvaluates() {
+		return evaluates;
+	}
+
+	public void setEvaluates(List<Evaluate> evaluates) {
+		this.evaluates = evaluates;
+	}
 
 	@Override
 	public String toString() {
-		return "Order [orderId=" + orderId + ", customerId=" + customerId + ", orderDate=" + orderDate
-				+ ", shippedDate=" + shippedDate + ", shipName=" + shipName + ", shipAddress=" + shipAddress
+		return "Order [orderId=" + orderId + ", account=" + account + ", orderNo=" + orderNo + ", orderDate="
+				+ orderDate + ", shippedDate=" + shippedDate + ", shipName=" + shipName + ", shipAddress=" + shipAddress
 				+ ", shipCity=" + shipCity + ", shipCountry=" + shipCountry + ", shippingFree=" + shippingFree
-				+ ", paymentType=" + paymentType + ", paidDate=" + paidDate + ", orderStatus=" + orderStatus + "]";
+				+ ", paymentType=" + paymentType + ", paidDate=" + paidDate + ", orderStatus=" + orderStatus
+				+ ", detail=" + detail + ", evaluates=" + evaluates + "]";
 	}
+
 	
-    
     
 }
 
