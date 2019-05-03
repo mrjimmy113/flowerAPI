@@ -1,6 +1,7 @@
 package nano.service;
 
 import java.util.List;
+import java.util.Map;
 
 import nano.entity.Account;
 import nano.exception.ResourceNotFoundException;
@@ -23,4 +24,8 @@ public interface AccountService  {
 	boolean checkUsernameExist(String username);
 	
 	boolean updateAccountRole(String username, String role);
+	
+	boolean updateAccountPassword(String username, String pass);
+	
+	Map<String, Object> getAccountInfo(String username);
 }

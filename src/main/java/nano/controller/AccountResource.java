@@ -1,6 +1,8 @@
 package nano.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,12 +76,58 @@ public class AccountResource {
 	}
 
 	@GetMapping("/checkUsernameExist/{username}")
-	public boolean checkUsernameExist(@PathVariable("username") String username) {
-		return service.checkUsernameExist(username);
+	public Integer checkUsernameExist(@PathVariable("username") String username) {
+		HttpStatus status = null;
+		boolean valid;
+		valid = service.checkUsernameExist(username);
+
+		if (valid == true) {
+			status = HttpStatus.OK;
+		} else {
+			status = HttpStatus.BAD_REQUEST;
+		}
+
+		return status.value();
 	}
 
-	@GetMapping("/updateAccountRole/{username}&{role}")
-	public boolean updateAccountRole(@PathVariable("username") String username, @PathVariable("role") String role) {
-		return service.updateAccountRole(username, role);
+	@PutMapping("/updateAccountRole?username={username}&role={role}")
+	public Integer updateAccountRole(@PathVariable("username") String username, @PathVariable("role") String role) {		
+		HttpStatus status = null;
+		boolean valid;
+		valid = service.updateAccountRole(username, role);
+
+		if (valid == true) {
+			status = HttpStatus.OK;
+		} else {
+			status = HttpStatus.BAD_REQUEST;
+		}
+
+		return status.value();
+	}
+	
+	@PutMapping("/updateAccountPassword?username={username}&pass={pass}")
+	public Integer updateAccountPassword(@PathVariable("username") String username, @PathVariable("pass") String pass) {		
+		HttpStatus status = null;
+		boolean valid;
+		valid = service.updateAccountRole(username, pass);
+
+		if (valid == true) {
+			status = HttpStatus.OK;
+		} else {
+			status = HttpStatus.BAD_REQUEST;
+		}
+
+		return status.value();
+	}
+	
+	@GetMapping("/getAccountInfo/{username}")
+	public Map<String, Object> getAccountInfo(@PathVariable("username") String username) {
+
+		Map<String, Object> obj = new HashMap<String, Object>();
+		
+		obj = service.getAccountInfo(username);
+	    
+		return obj;
+
 	}
 }
