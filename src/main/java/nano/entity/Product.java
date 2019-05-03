@@ -64,13 +64,15 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
 	private List<ProductItem> items = new ArrayList<ProductItem>();
 	
+	@JsonIgnore
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Evaluate> evaluates = new ArrayList<>();
+	
 	public Product() {}
 
 	public int getProductId() {
 		return productId;
-	}
-	
-	
+	}		
 
 	public List<ProductFlower> getFlowers() {
 		return flowers;
@@ -148,9 +150,24 @@ public class Product implements Serializable {
 		this.imageName = imageName;
 	}
 
+	public List<Evaluate> getEvaluates() {
+		return evaluates;
+	}
 
+	public void setEvaluates(List<Evaluate> evaluates) {
+		this.evaluates = evaluates;
+	}
 
+	@Override
+	public String toString() {
+		return "Product [productId=" + productId + ", productName=" + productName + ", productDescription="
+				+ productDescription + ", imageUrl=" + imageUrl + ", imageName=" + imageName + ", price=" + price
+				+ ", created=" + created + ", event=" + event + ", flowers=" + flowers + ", items=" + items
+				+ ", evaluates=" + evaluates + "]";
+	}
 	
+	
+
 
 	
 	

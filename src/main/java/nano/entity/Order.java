@@ -70,10 +70,7 @@ public class Order implements Serializable {
     private String orderStatus;
     
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderDetail> detail = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<Evaluate> evaluates = new ArrayList<>();
+    private List<OrderDetail> detail = new ArrayList<>();       
     
     public Order() {
 	}   
@@ -162,14 +159,7 @@ public class Order implements Serializable {
 
 	public void setOrderNo(long orderNo) {
 		this.orderNo = orderNo;
-	}
-	public List<Evaluate> getEvaluates() {
-		return evaluates;
-	}
-
-	public void setEvaluates(List<Evaluate> evaluates) {
-		this.evaluates = evaluates;
-	}
+	}	
 
 	@Override
 	public String toString() {
@@ -177,7 +167,7 @@ public class Order implements Serializable {
 				+ orderDate + ", shippedDate=" + shippedDate + ", shipName=" + shipName + ", shipAddress=" + shipAddress
 				+ ", shipCity=" + shipCity + ", shipCountry=" + shipCountry + ", shippingFree=" + shippingFree
 				+ ", paymentType=" + paymentType + ", paidDate=" + paidDate + ", orderStatus=" + orderStatus
-				+ ", detail=" + detail + ", evaluates=" + evaluates + "]";
+				+ ", detail=" + detail + "]";
 	}
 
 	
