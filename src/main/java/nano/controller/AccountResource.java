@@ -91,18 +91,8 @@ public class AccountResource {
 	}
 
 	@GetMapping("/checkUsernameExist/{username}")
-	public Integer checkUsernameExist(@PathVariable("username") String username) {
-		HttpStatus status = null;
-		boolean valid;
-		valid = service.checkUsernameExist(username);
-
-		if (valid == true) {
-			status = HttpStatus.OK;
-		} else {
-			status = HttpStatus.BAD_REQUEST;
-		}
-
-		return status.value();
+	public boolean checkUsernameExist(@PathVariable("username") String username) {
+		return service.checkUsernameExist(username);
 	}
 
 	@PutMapping("/updateAccountRole?username={username}&role={role}")
