@@ -1,17 +1,17 @@
 package nano.service;
 
 import java.io.IOException;
-import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.web.multipart.MultipartFile;
 
 import nano.entity.Banner;
 import nano.exception.ResourceNotFoundException;
+import nano.ggModules.GoogleStorageModule;
 import nano.repository.BannerRepository;
 
 @Service
@@ -28,34 +28,12 @@ public class BannerServiceImpl implements BannerService{
 
 	@Transactional
 	@Override
-	public Banner newBanner(Banner newBanner, BindingResult result) {
-		
-		boolean fileError = false;
-
-		if (!((newBanner.getBannerId() != null) && newBanner.getFile().isEmpty())) {
-			if (!newBanner.getFile().getContentType().contains("image")) {
-				ObjectError error = new ObjectError("file", "file");
-				result.addError(error);
-				fileError = true;
-			}
-		}
-
-		if (result.hasErrors()) {
-			if(fileError)
-			return null;
-		}
-		if (!((newBanner.getBannerId() != null) && newBanner.getFile().isEmpty())) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("data:image/png;base64,");
-			try {
-				sb.append(Base64.getEncoder().encodeToString(newBanner.getFile().getBytes()));
-				newBanner.setPhotoBase64(sb.toString());
-			} catch (IOException e) {
-				return null;
-			}
-		}				
-		
-		return repository.save(newBanner);
+	public void newBanner(MultipartFile file) throws IOException {
+		Banner banner = new Banner();
+		String fileName = "Banner" + (new Date()).getTime();
+		banner.setBannerName(fileName);
+		banner.setImageUrl(GoogleStorageModule.upload(fileName, file.getBytes(), file.getContentType()));
+		repository.save(banner);
 	}
 
 	@Transactional
@@ -67,7 +45,9 @@ public class BannerServiceImpl implements BannerService{
 
 	@Transactional
 	@Override
-	public void deleteBanner(int id) {
+	public void deleteBanner(int id) throws IOException {
+		Banner banner = repository.findById(id).get();
+		GoogleStorageModule.delete(banner.getBannerName());
 		repository.deleteById(id);
 	}
 

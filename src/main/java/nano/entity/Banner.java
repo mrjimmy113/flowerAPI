@@ -11,9 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -31,11 +28,9 @@ public class Banner {
 	@Column
 	private String bannerName;
 	
-	@Column(columnDefinition = "LONGTEXT")
-	private String photoBase64;
+	@Column
+	private String imageUrl;
 
-	@Transient
-	private MultipartFile file;
 
 	public Integer getBannerId() {
 		return bannerId;
@@ -53,21 +48,14 @@ public class Banner {
 		this.bannerName = bannerName;
 	}
 
-	public String getPhotoBase64() {
-		return photoBase64;
+	public String getImageUrl() {
+		return imageUrl;
 	}
 
-	public void setPhotoBase64(String photoBase64) {
-		this.photoBase64 = photoBase64;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
-	public MultipartFile getFile() {
-		return file;
-	}
-
-	public void setFile(MultipartFile file) {
-		this.file = file;
-	}
 
 	
 	

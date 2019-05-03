@@ -47,15 +47,22 @@ public class AccountResource {
 		return new ResponseEntity<TokenDTO>(tokenDto, httpStatus);
 
 	}
-
-	@GetMapping("/all")
+	
+	@GetMapping("/acc")
 	public List<Account> all() {
 		return service.all();
 	}
 
-	@PostMapping("/add")
-	public Account newAccount(@RequestBody Account newAccount) {
-		return service.newAccount(newAccount);
+	@PostMapping("/acc")
+	public Integer newAccount(@RequestBody Account newAccount) {
+		HttpStatus status = null;
+		try {
+			service.newAccount(newAccount);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return status.value();
 	}
 
 	@GetMapping("get/{id}")
