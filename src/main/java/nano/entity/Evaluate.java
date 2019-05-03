@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -22,8 +24,11 @@ public class Evaluate {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer evaluateId;
-	@Column
-	private Integer productId;
+
+	@ManyToOne
+	@JoinColumn(name = "product_id")
+	private Product product;
+
 	@Column
 	private String comment;
 	@Column
@@ -37,12 +42,12 @@ public class Evaluate {
 		this.evaluateId = evaluateId;
 	}
 
-	public Integer getProductId() {
-		return productId;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setProductId(Integer productId) {
-		this.productId = productId;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public String getComment() {

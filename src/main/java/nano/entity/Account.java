@@ -37,20 +37,8 @@ public class Account {
 	private String telephone;
 
 	@Column
-	private Integer postalCode;
-
-	@Column
-	private String city;
-
-	@Column
-	private String street;
-
-	@Column
-	private String houseNumber;
-
-	@Column
-	private String placeNumber;
-
+	private String address;	
+	
 	public Integer getId() {
 		return id;
 	}
@@ -115,44 +103,12 @@ public class Account {
 		this.telephone = telephone;
 	}
 
-	public Integer getPostalCode() {
-		return postalCode;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setPostalCode(Integer postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getStreet() {
-		return street;
-	}
-
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	public String getHouseNumber() {
-		return houseNumber;
-	}
-
-	public void setHouseNumber(String houseNumber) {
-		this.houseNumber = houseNumber;
-	}
-
-	public String getPlaceNumber() {
-		return placeNumber;
-	}
-
-	public void setPlaceNumber(String placeNumber) {
-		this.placeNumber = placeNumber;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	@Override
