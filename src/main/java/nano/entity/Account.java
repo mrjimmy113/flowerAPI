@@ -18,7 +18,7 @@ public class Account {
 	@Column
 	private String role;
 	
-	@Column
+	@Column(unique = true)
 	private String username;
 	
 	@Column

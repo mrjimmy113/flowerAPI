@@ -3,9 +3,12 @@ package nano.entity;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class ProductItem {
@@ -13,12 +16,13 @@ public class ProductItem {
 	@EmbeddedId
 	private ProductItemId id;
 	
+	@JsonIgnore
 	@ManyToOne
 	@MapsId("productId")
 	@JoinColumn(name ="productId", insertable = false, updatable = false)
 	private Product product;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@MapsId("itemId")
 	@JoinColumn(name="itemId", insertable = false, updatable = false)
 	private Item item;

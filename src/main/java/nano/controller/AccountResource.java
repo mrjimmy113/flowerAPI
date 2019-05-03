@@ -90,7 +90,7 @@ public class AccountResource {
 		
 	}
 
-	@GetMapping("/checkUsernameExist/{username}")
+	@GetMapping("/acc/checkUsernameExist/{username}")
 	public boolean checkUsernameExist(@PathVariable("username") String username) {
 		return service.checkUsernameExist(username);
 	}

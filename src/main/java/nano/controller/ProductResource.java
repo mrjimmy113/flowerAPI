@@ -57,7 +57,7 @@ public class ProductResource {
 
 	@GetMapping("/{productId}")
 	public Product getProduct(@PathVariable int productId) {
-		Product product = productService.findById(productId);
+		Product product = productService.getDetail(productId);
 
 		return product;
 	}

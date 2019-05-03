@@ -6,6 +6,7 @@ s * To change this license header, choose License Headers in Project Properties.
 package nano.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 
 import nano.dto.GetAllDTO;
+import nano.dto.ProductDTO;
 import nano.entity.Product;
 import nano.entity.ProductFlower;
 import nano.entity.ProductFlowerId;
@@ -99,20 +101,27 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Transactional
 	@Override
-	public List<Product> searchByNamePage(String name, int pageNum) {
+	public List<ProductDTO> searchByNamePage(String name, int pageNum) {
 		Pageable pageable = PageRequest.of(pageNum -1, PAGEMAXSIZE);
 		Page<Product> page = productRepository.findByProductNameContaining(name, pageable);
-		
-		return page.getContent();
+		List<ProductDTO> dtos = new ArrayList<ProductDTO>();
+		for (Product product : page.getContent()) {
+			dtos.add(product.toDTO());
+		}
+		return dtos;
 	}
 	@Transactional
 	@Override
-	public GetAllDTO<Product> findAllItem(String searchTerm) {
+	public GetAllDTO<ProductDTO> findAllItem(String searchTerm) {
 		Pageable pageable = PageRequest.of(0, PAGEMAXSIZE);
 		Page<Product> page = productRepository.findByProductNameContaining(searchTerm, pageable);
-		GetAllDTO<Product> dto = new GetAllDTO<Product>();
+		GetAllDTO<ProductDTO> dto = new GetAllDTO<ProductDTO>();
+		List<ProductDTO> dtos = new ArrayList<ProductDTO>();
+		for (Product product : page.getContent()) {
+			dtos.add(product.toDTO());
+		}
 		dto.setMaxPage(page.getTotalPages());
-		dto.setList(page.getContent());
+		dto.setList(dtos);
 		return dto;
 	}
 
@@ -151,6 +160,15 @@ public class ProductServiceImpl implements ProductService {
 			pi.setId(new ProductItemId(inserted.getProductId(), pi.getItem().getId()));
 			piRep.save(pi);
 		}
+	}
+
+	@Override
+	public Product getDetail(Integer id) {
+		Product product = productRepository.findById(id).get();
+		product.setFlowers(pfRep.findByIdProductId(id));
+		product.setItems(piRep.findByIdProductId(id));
+		System.out.println(product.getFlowers().size());
+		return product;
 	}
 
 }

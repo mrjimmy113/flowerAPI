@@ -19,6 +19,8 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import nano.dto.ProductDTO;
+
 @Entity
 @Table(name="product")
 public class Product implements Serializable {
@@ -56,11 +58,9 @@ public class Product implements Serializable {
 	@JoinColumn(name="eventId")
 	private Event event;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
 	private List<ProductFlower> flowers = new ArrayList<ProductFlower>();
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
 	private List<ProductItem> items = new ArrayList<ProductItem>();
 	
@@ -164,6 +164,20 @@ public class Product implements Serializable {
 				+ productDescription + ", imageUrl=" + imageUrl + ", imageName=" + imageName + ", price=" + price
 				+ ", created=" + created + ", event=" + event + ", flowers=" + flowers + ", items=" + items
 				+ ", evaluates=" + evaluates + "]";
+	}
+	
+	public ProductDTO toDTO() {
+		ProductDTO dto =new ProductDTO();
+		dto.setCreated(created);
+		dto.setEvaluates(evaluates);
+		dto.setEvent(event);
+		dto.setImageName(imageName);
+		dto.setImageUrl(imageUrl);
+		dto.setPrice(price);
+		dto.setProductDescription(productDescription);
+		dto.setProductId(productId);
+		dto.setProductName(productName);
+		return dto;
 	}
 	
 	
