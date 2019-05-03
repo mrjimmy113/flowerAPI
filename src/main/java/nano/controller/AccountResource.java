@@ -50,7 +50,7 @@ public class AccountResource {
 
 	}
 	
-	@GetMapping("/acc")
+	@GetMapping("/all")
 	public List<Account> all() {
 		return service.all();
 	}
@@ -78,8 +78,16 @@ public class AccountResource {
 	}
 
 	@DeleteMapping("/delete/{id}")
-	void deleteAccount(@PathVariable int id) {
-		service.deleteAccount(id);
+	public Integer deleteAccount(@PathVariable int id) {			
+		HttpStatus status = null;
+		try {
+			service.deleteAccount(id);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return status.value();
+		
 	}
 
 	@GetMapping("/checkUsernameExist/{username}")

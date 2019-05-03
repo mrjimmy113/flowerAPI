@@ -67,8 +67,17 @@ public class AccountServiceImpl implements AccountService {
 
 	@Transactional
 	@Override
-	public void deleteAccount(int id) {
-		repository.deleteById(id);
+	public boolean deleteAccount(int id) {
+		
+		boolean valid = false;
+		try {
+			repository.deleteById(id);
+			valid = true;
+		} catch (Exception e) {
+			valid = false;
+		}
+		
+		return valid;
 	}
 
 	@Transactional
