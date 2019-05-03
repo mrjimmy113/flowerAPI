@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import nano.dto.GetAllDTO;
+import nano.dto.ProductDTO;
 import nano.entity.Product;
 import nano.entity.ProductFlower;
 import nano.entity.ProductItem;
@@ -28,9 +29,9 @@ public class ProductResource {
 	ProductService productService;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<GetAllDTO<Product>> getAllProduct(@RequestParam String searchTerm) {
+	public ResponseEntity<GetAllDTO<ProductDTO>> getAllProduct(@RequestParam String searchTerm) {
 		HttpStatus status = null;
-		GetAllDTO<Product> dto = null;
+		GetAllDTO<ProductDTO> dto = null;
 		try {
 			dto = productService.findAllItem(searchTerm);
 			status = HttpStatus.OK;
@@ -38,12 +39,12 @@ public class ProductResource {
 			System.out.println(e.getMessage());
 			status = HttpStatus.BAD_REQUEST;
 		}
-		return new ResponseEntity<GetAllDTO<Product>>(dto,status);
+		return new ResponseEntity<GetAllDTO<ProductDTO>>(dto,status);
 	}
 	
 	@GetMapping(value = "/search")
-	public ResponseEntity<List<Product>> searchWithPage(@RequestParam String searchTerm, @RequestParam int pageNum) {
-		List<Product> items = null;
+	public ResponseEntity<List<ProductDTO>> searchWithPage(@RequestParam String searchTerm, @RequestParam int pageNum) {
+		List<ProductDTO> items = null;
 		HttpStatus status = null;
 		try {	
 			items = productService.searchByNamePage(searchTerm, pageNum);
@@ -52,7 +53,7 @@ public class ProductResource {
 			System.out.println(e.getMessage());
 			status = HttpStatus.BAD_REQUEST;
 		}
-		return new ResponseEntity<List<Product>>(items,status);
+		return new ResponseEntity<List<ProductDTO>>(items,status);
 	}
 
 	@GetMapping("/{productId}")
