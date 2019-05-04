@@ -1,29 +1,33 @@
 package nano.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "account")
 public class Account {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@Column
 	private String role;
-	
+
 	@Column(unique = true)
 	private String username;
-	
+
 	@Column
-	private String password;	
-	
+	private String password;
+
 	@Column
 	private String name;
 
@@ -37,8 +41,11 @@ public class Account {
 	private String telephone;
 
 	@Column
-	private String address;	
-	
+	private String address;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
+	private List<Order> orders;
+
 	public Integer getId() {
 		return id;
 	}
@@ -109,6 +116,14 @@ public class Account {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}	
+	
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
 	}
 
 	@Override
@@ -135,7 +150,5 @@ public class Account {
 			return false;
 		return true;
 	}
-	
-	
-	
+
 }
