@@ -45,7 +45,7 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	@Override
 	public List<Account> all() {
-		return repository.findAll();
+		return repository.myFindAll();
 	}
 
 	@Transactional
@@ -170,5 +170,14 @@ public class AccountServiceImpl implements AccountService {
 		acc.setList(listAccount);
 		acc.setMaxPage(page.getTotalPages());
 		return acc;
+	}
+	
+	@Transactional
+	@Override
+	public boolean forgetPass(String email) {
+		
+		
+		
+		return false;
 	}
 }

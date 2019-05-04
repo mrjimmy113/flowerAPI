@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "account")
 public class Account {
@@ -34,7 +36,7 @@ public class Account {
 	@Column
 	private String surname;
 
-	@Column
+	@Column(unique = true)
 	private String email;
 
 	@Column

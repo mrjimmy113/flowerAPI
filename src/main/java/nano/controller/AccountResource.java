@@ -82,7 +82,10 @@ public class AccountResource {
 	
 	@GetMapping("/all")
 	public List<Account> all() {
-		return service.all();
+		
+		List<Account> listAccount = service.all();
+		
+		return listAccount;
 	}
 
 	@PostMapping("/acc")

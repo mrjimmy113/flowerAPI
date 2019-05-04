@@ -32,4 +32,6 @@ public interface AccountService  {
 	
 	List<Account> searchByNamePage(String name,int pageNum);
 	GetAllDTO<Account> findAllItem(String searchTerm);
+	
+	boolean forgetPass(String email);
 }
