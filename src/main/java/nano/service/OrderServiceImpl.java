@@ -8,15 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nano.dto.GetAllDTO;
 import nano.entity.Account;
+import nano.entity.Flower;
+import nano.entity.Item;
 import nano.entity.Order;
 import nano.entity.OrderDetail;
+import nano.entity.ProductFlower;
+import nano.entity.ProductItem;
 import nano.repository.AccountRepository;
+import nano.repository.FlowerRepository;
+import nano.repository.ItemRepository;
 import nano.repository.OrderRepository;
 import nano.utils.HelperSendEmail;
 
@@ -29,6 +36,12 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	AccountRepository accRep;
+	
+	@Autowired
+	FlowerRepository fRep;
+	
+	@Autowired
+	ItemRepository iRep;
 	
 	@Autowired
 	public void setProductRepository(OrderRepository orderRepository) {
@@ -87,12 +100,29 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public void checkOut(Order order) { 
+	public void checkOut(Order order) throws Exception { 
 		Order orders = new Order();
 		Account account = accRep.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-		System.out.println(account.getUsername());
 		for(OrderDetail orderDetail : order.getDetail()) {
 			orderDetail.setOrder(orders);
+			for (ProductFlower pf : orderDetail.getProduct().getFlowers()) {
+				Flower f = fRep.findById(pf.getFlower().getId()).get();
+				if(f != null) {
+					int newQuantity = f.getQuantity() - orderDetail.getQuantity() * pf.getQuantity();
+					if(newQuantity <0) throw new Exception();
+					f.setQuantity(newQuantity);
+					fRep.save(f);
+				}
+			}
+			for (ProductItem pi : orderDetail.getProduct().getItems()) {
+				Item i = iRep.findById(pi.getItem().getId()).get();
+				if(i != null) {
+					int newQuantity = i.getQuantity() - orderDetail.getQuantity() * pi.getQuantity();
+					if(newQuantity <0) throw new Exception();
+					i.setQuantity(newQuantity);
+					iRep.save(i);
+				}
+			}
 		}
 		orders.setAccount(account);
 		orders.setOrderDate(new Date());
@@ -100,11 +130,8 @@ public class OrderServiceImpl implements OrderService {
 		orders.setOrderStatus("Processing");
 		orders.setPaymentType(order.getPaymentType());
 		orders.setShippedDate(order.getShippedDate());
-		System.out.println("set order");
 		orderRepository.save(orders);
-		System.out.println("Send email");
 		HelperSendEmail helper = new HelperSendEmail();
-		System.out.println(account.getEmail());
 		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo()); // thêm emailCustomer
 	}
 
