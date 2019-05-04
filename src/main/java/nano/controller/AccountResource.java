@@ -16,14 +16,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import nano.dto.AccountDTO;
+import nano.dto.GetAllDTO;
 import nano.dto.TokenDTO;
 import nano.entity.Account;
-import nano.service.AccountService;
 import nano.exception.ResourceNotFoundException;
+import nano.service.AccountService;
 
 @RestController
 public class AccountResource {
@@ -48,6 +50,32 @@ public class AccountResource {
 
 		return new ResponseEntity<TokenDTO>(tokenDto, httpStatus);
 
+	}
+	
+	@GetMapping(value = "/acc",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<GetAllDTO<Account>> getAllItem(@RequestParam String searchTerm) {
+		GetAllDTO<Account> item = null;
+		HttpStatus status = null;
+		try {	
+			item = service.findAllItem(searchTerm);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<GetAllDTO<Account>>(item, status);
+	}
+	
+	@GetMapping(value = "/acc/search",produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Account>> searchWithPage(@RequestParam String searchTerm, @RequestParam int pageNum) {
+		List<Account> items = null;
+		HttpStatus status = null;
+		try {	
+			items = service.searchByNamePage(searchTerm, pageNum);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<List<Account>>(items,status);
 	}
 	
 	@GetMapping("/all")
@@ -77,7 +105,7 @@ public class AccountResource {
 		return service.replaceAccount(newAccount, id);
 	}
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/acc/{id}")
 	public Integer deleteAccount(@PathVariable int id) {			
 		HttpStatus status = null;
 		try {
@@ -95,35 +123,33 @@ public class AccountResource {
 		return service.checkUsernameExist(username);
 	}
 
-	@PutMapping("/updateAccountRole?username={username}&role={role}")
-	public Integer updateAccountRole(@PathVariable("username") String username, @PathVariable("role") String role) {		
+	@PutMapping("/acc/updateAccountRole")
+	public Integer updateAccountRole(@RequestParam("username") String username, @RequestParam("role") String role) {		
 		HttpStatus status = null;
-		boolean valid;
-		valid = service.updateAccountRole(username, role);
-
-		if (valid == true) {
+		try {
+			service.updateAccountRole(username, role);
 			status = HttpStatus.OK;
-		} else {
+		} catch (Exception e) {
 			status = HttpStatus.BAD_REQUEST;
 		}
 
 		return status.value();
 	}
 	
-	@PutMapping("/updateAccountPassword?username={username}&pass={pass}")
-	public Integer updateAccountPassword(@PathVariable("username") String username, @PathVariable("pass") String pass) {		
-		HttpStatus status = null;
-		boolean valid;
-		valid = service.updateAccountRole(username, pass);
-
-		if (valid == true) {
-			status = HttpStatus.OK;
-		} else {
-			status = HttpStatus.BAD_REQUEST;
-		}
-
-		return status.value();
-	}
+//	@PutMapping("/updateAccountPassword?username={username}&pass={pass}")
+//	public Integer updateAccountPassword(@PathVariable("username") String username, @PathVariable("pass") String pass) {		
+//		HttpStatus status = null;
+//		boolean valid;
+//		valid = service.updateAccountRole(username, pass);
+//
+//		if (valid == true) {
+//			status = HttpStatus.OK;
+//		} else {
+//			status = HttpStatus.BAD_REQUEST;
+//		}
+//
+//		return status.value();
+//	}
 	
 	@GetMapping("/getAccountInfo/{username}")
 	public Map<String, Object> getAccountInfo(@PathVariable("username") String username) {

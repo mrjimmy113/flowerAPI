@@ -49,6 +49,8 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 					authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
 			        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 				}
+			}else {
+				System.out.println("RIP Token");
 			}
 		}
 		chain.doFilter(req, res);

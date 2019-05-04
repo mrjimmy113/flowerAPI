@@ -5,16 +5,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import nano.dto.GetAllDTO;
 import nano.entity.Account;
-import nano.repository.AccountRepository;
 import nano.exception.ResourceNotFoundException;
+import nano.repository.AccountRepository;
 
 @Service
 public class AccountServiceImpl implements AccountService {
 
+	private static final int PAGEMAXSIZE = 9;
+	
 	@Autowired
 	AccountRepository repository;
 
@@ -96,19 +102,14 @@ public class AccountServiceImpl implements AccountService {
 
 	@Transactional
 	@Override
-	public boolean updateAccountRole(String username, String role) {
+	public void updateAccountRole(String username, String role) {
 
 		Account account = new Account();
 		account = repository.findByUsername(username);
-
-		if (account != null) {
-
+		if(account != null) {
 			account.setRole(role);
-
-			return true;
 		}
-
-		return false;
+		
 	}
 
 	@Transactional
@@ -142,5 +143,32 @@ public class AccountServiceImpl implements AccountService {
 		obj.put("address", account.getAddress());
 
 		return obj;
+	}
+
+	@Override
+	public List<Account> searchByNamePage(String name, int pageNum) {
+		Pageable pageable = PageRequest.of(pageNum -1, PAGEMAXSIZE);
+		Page<Account> page = repository.findByUsernameContaining(name, pageable);
+		List<Account> listAccount = page.getContent();
+		for (Account account : listAccount) {
+			account.setPassword(null);
+			account.setOrders(null);
+		}
+		return listAccount;
+	}
+
+	@Override
+	public GetAllDTO<Account> findAllItem(String searchTerm) {
+		Pageable pageable = PageRequest.of(0, PAGEMAXSIZE);
+		Page<Account> page = repository.findByUsernameContaining(searchTerm, pageable);
+		List<Account> listAccount = page.getContent();
+		for (Account account : listAccount) {
+			account.setPassword(null);
+			account.setOrders(null);
+		}
+		GetAllDTO<Account> acc = new GetAllDTO<Account>();
+		acc.setList(listAccount);
+		acc.setMaxPage(page.getTotalPages());
+		return acc;
 	}
 }
