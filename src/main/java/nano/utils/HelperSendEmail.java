@@ -7,7 +7,7 @@ import org.springframework.mail.SimpleMailMessage;
 public class HelperSendEmail {
 	
 	public void sendEmailOrder(String email, long orderNo) {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/WEB-INF/applicationContext.xml");
         MailSender mailSender = (MailSender) context.getBean("smtp");
         System.out.println("Sending...");
         SimpleMailMessage message = new SimpleMailMessage();
