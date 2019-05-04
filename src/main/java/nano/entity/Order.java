@@ -29,7 +29,7 @@ public class Order implements Serializable {
 	@Column(name="order_id")
 	private int orderId;
 	
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne
     @JoinColumn(name ="account_id")
     private Account account;
 	

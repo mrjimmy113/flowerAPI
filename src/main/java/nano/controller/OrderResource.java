@@ -24,6 +24,7 @@ public class OrderResource {
 	
 	OrderService orderService;
 	
+	
 	@Autowired
 	public void setorderService(OrderService orderService) {
 		this.orderService = orderService;
@@ -49,9 +50,16 @@ public class OrderResource {
 	
 	@PostMapping("/orders")
 	public Integer addorder(@RequestBody Order order) {
-		order.setOrderId(0);
-		orderService.save(order);
-		return 200;
+		HttpStatus status = null;
+		try {
+			orderService.checkOut(order);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			System.out.println("CL:" + e.getMessage());
+			e.printStackTrace();
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return status.value();
 	}
 	
 	@PutMapping("/orders")

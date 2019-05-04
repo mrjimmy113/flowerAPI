@@ -13,4 +13,5 @@ public interface OrderService  {
 	 void deleteById(int id);
 	List<Order> searchByNamePage(Long from, Long to, int pageNum);
 	GetAllDTO<Order> findAllItem(Long from, Long to);
+	void checkOut(Order order);
 }

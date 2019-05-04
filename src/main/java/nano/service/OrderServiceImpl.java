@@ -8,13 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nano.dto.GetAllDTO;
+import nano.entity.Account;
 import nano.entity.Order;
 import nano.entity.OrderDetail;
+import nano.repository.AccountRepository;
 import nano.repository.OrderRepository;
+import nano.utils.HelperSendEmail;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -22,6 +26,9 @@ public class OrderServiceImpl implements OrderService {
 	private static final int PAGEMAXSIZE = 9;
 
 	private OrderRepository orderRepository;
+	
+	@Autowired
+	AccountRepository accRep;
 	
 	@Autowired
 	public void setProductRepository(OrderRepository orderRepository) {
@@ -76,6 +83,29 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void deleteById(int id) {
 		orderRepository.deleteById(id);;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public void checkOut(Order order) { 
+		Order orders = new Order();
+		Account account = accRep.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+		System.out.println(account.getUsername());
+		for(OrderDetail orderDetail : order.getDetail()) {
+			orderDetail.setOrder(orders);
+		}
+		orders.setAccount(account);
+		orders.setOrderDate(new Date());
+		orders.setOrderNo((new Date()).getTime());
+		orders.setOrderStatus("Processing");
+		orders.setPaymentType(order.getPaymentType());
+		orders.setShippedDate(order.getShippedDate());
+		System.out.println("set order");
+		orderRepository.save(orders);
+		System.out.println("Send email");
+		HelperSendEmail helper = new HelperSendEmail();
+		System.out.println(account.getEmail());
+		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo()); // thêm emailCustomer
 	}
 
 

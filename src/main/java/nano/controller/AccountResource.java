@@ -43,6 +43,8 @@ public class AccountResource {
 		if (!token.isEmpty()) {
 			httpStatus = HttpStatus.OK;
 			tokenDto.setTokenValue(token);
+			Account acc = service.getAccountByUsername(dto.getUsername());
+			tokenDto.setName(acc.getName() + " "  + acc.getSurname());
 
 		} else {
 			httpStatus = HttpStatus.BAD_REQUEST;
