@@ -79,6 +79,11 @@ public class ItemServiceImpl implements ItemService {
 		}
 		return dtos;
 	}
+
+	@Override
+	public ItemDTO findOne(int id) {
+		return rep.findById(id).get().toDTO();
+	}
 	
 	
 

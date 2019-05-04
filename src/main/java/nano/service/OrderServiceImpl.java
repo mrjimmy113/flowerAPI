@@ -23,8 +23,8 @@ import nano.entity.ProductItem;
 import nano.repository.AccountRepository;
 import nano.repository.FlowerRepository;
 import nano.repository.ItemRepository;
+import nano.repository.OrderDetailRepository;
 import nano.repository.OrderRepository;
-import nano.utils.HelperSendEmail;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -43,6 +43,9 @@ public class OrderServiceImpl implements OrderService {
 	ItemRepository iRep;
 	
 	@Autowired
+	OrderDetailRepository dRep;
+	
+	@Autowired
 	public void setProductRepository(OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
 	}
@@ -56,7 +59,18 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<Order> searchByNamePage(Long from,Long to, int pageNum) {
 		Pageable pageable = PageRequest.of(pageNum -1, PAGEMAXSIZE);
-		Page<Order> page = orderRepository.findByOrderDateBetween(new Date(from), new Date(to), pageable);		
+		Page<Order> page = orderRepository.findByOrderDateBetween(new Date(from), new Date(to), pageable);
+		List<Order> orders = page.getContent();
+		for (Order order : orders) {
+			Account acc = accRep.findByOrders(order);
+			acc.setOrders(null);
+			List<OrderDetail> details = dRep.findByOrder(order);
+			for (OrderDetail d : details) {
+				d.setOrder(null);
+			}
+			order.setDetail(details);
+			order.setAccount(acc);	
+		}
 		return page.getContent();
 	}
 	@Transactional
@@ -66,7 +80,18 @@ public class OrderServiceImpl implements OrderService {
 		Page<Order> page = orderRepository.findByOrderDateBetween(new Date(from), new Date(to), pageable);
 		GetAllDTO<Order> dto = new GetAllDTO<Order>();
 		dto.setMaxPage(page.getTotalPages());
-		dto.setList(page.getContent());
+		List<Order> orders = page.getContent();
+		for (Order order : orders) {
+			Account acc = accRep.findByOrders(order);
+			acc.setOrders(null);
+			List<OrderDetail> details = dRep.findByOrder(order);
+			for (OrderDetail d : details) {
+				d.setOrder(null);
+			}
+			order.setDetail(details);
+			order.setAccount(acc);
+		}
+		dto.setList(orders);
 		return dto;
 	}
 
@@ -108,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
 				Flower f = fRep.findById(pf.getFlower().getId()).get();
 				if(f != null) {
 					int newQuantity = f.getQuantity() - orderDetail.getQuantity() * pf.getQuantity();
-					if(newQuantity <0) throw new Exception();
+					if(newQuantity <0) throw new Exception("stock");
 					f.setQuantity(newQuantity);
 					fRep.save(f);
 				}
@@ -117,7 +142,7 @@ public class OrderServiceImpl implements OrderService {
 				Item i = iRep.findById(pi.getItem().getId()).get();
 				if(i != null) {
 					int newQuantity = i.getQuantity() - orderDetail.getQuantity() * pi.getQuantity();
-					if(newQuantity <0) throw new Exception();
+					if(newQuantity <0) throw new Exception("stock");
 					i.setQuantity(newQuantity);
 					iRep.save(i);
 				}
@@ -126,12 +151,12 @@ public class OrderServiceImpl implements OrderService {
 		orders.setAccount(account);
 		orders.setOrderDate(new Date());
 		orders.setOrderNo((new Date()).getTime());
-		orders.setOrderStatus("Processing");
+		orders.setOrderStatus("PROCESSING");
 		orders.setPaymentType(order.getPaymentType());
 		orders.setShippedDate(order.getShippedDate());
 		orderRepository.save(orders);
-		HelperSendEmail helper = new HelperSendEmail();
-		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo()); // thêm emailCustomer
+//		HelperSendEmail helper = new HelperSendEmail();
+//		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo()); // thêm emailCustomer
 	}
 
 

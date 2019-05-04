@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import nano.entity.Account;
+import nano.entity.Order;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
 

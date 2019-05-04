@@ -115,4 +115,9 @@ public class FlowerServiceImpl implements FlowerService {
 		return dtos;
 	}
 
+	@Override
+	public FlowerDTO findOne(int id) {
+		return rep.findById(id).get().toDTO();
+	}
+
 }

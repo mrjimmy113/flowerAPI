@@ -26,4 +26,5 @@ public interface FlowerService {
     List<FlowerDTO> searchByNamePage(String name,int pageNum);
     List<FlowerDTO> getAll();
 	void modifyFlower(MultipartFile file, String dto) throws IOException;
+	FlowerDTO findOne(int id);
 }

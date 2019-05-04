@@ -13,4 +13,5 @@ public interface ItemService {
 	void removeItem (Integer id);
 	List<ItemDTO> searchByNamePage(String name,int pageNum);
 	List<ItemDTO> getAll();
+	ItemDTO findOne(int id);
 }

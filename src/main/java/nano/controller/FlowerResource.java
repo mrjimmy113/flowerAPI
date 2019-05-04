@@ -46,6 +46,20 @@ public class FlowerResource {
 		}
 		return new ResponseEntity<List<FlowerDTO>>(dtos, status);
 	}
+	
+	@GetMapping("/flower/one")
+	public ResponseEntity<FlowerDTO> findOne(@RequestParam("id") int id) {
+		FlowerDTO dto = null;
+		HttpStatus status = null;
+		try {
+			dto = service.findOne(id);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		
+		return new ResponseEntity<FlowerDTO>(dto,status);
+	}
 
 	@RequestMapping(value = "/flower", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody

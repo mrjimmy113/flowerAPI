@@ -40,6 +40,19 @@ public class ItemResource {
 		return new ResponseEntity<List<ItemDTO>>(dtos, status);
 	}
 	
+	@GetMapping("/one")
+	public ResponseEntity<ItemDTO> findOne(@RequestParam("id") int id) {
+		HttpStatus status = null;
+		ItemDTO dto = null;
+		try {
+			dto = service.findOne(id);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<ItemDTO>(dto,status);
+	}
+	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<GetAllDTO<ItemDTO>> getAllItem(@RequestParam String searchTerm) {
 		GetAllDTO<ItemDTO> item;
