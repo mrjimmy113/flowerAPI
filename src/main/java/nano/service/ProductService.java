@@ -41,5 +41,5 @@ public interface ProductService {
 
 	void updateProduct(MultipartFile file, String json) throws IOException;
 	
-	Product getDetail(Integer id);
+	ProductDTO getDetail(Integer id);
 }

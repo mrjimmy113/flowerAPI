@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import nano.dto.GetAllDTO;
 import nano.entity.Order;
+import nano.entity.OrderDetail;
 import nano.repository.OrderRepository;
 
 @Service
@@ -66,6 +67,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public void save(Order product) {
+		for (OrderDetail od : product.getDetail()) {
+			od.setOrder(product);
+		}
 		orderRepository.save(product);
 	}
 

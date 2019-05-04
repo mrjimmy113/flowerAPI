@@ -22,12 +22,16 @@ import com.google.gson.Gson;
 
 import nano.dto.GetAllDTO;
 import nano.dto.ProductDTO;
+import nano.dto.ProductFlowerDTO;
+import nano.dto.ProductItemDTO;
 import nano.entity.Product;
 import nano.entity.ProductFlower;
 import nano.entity.ProductFlowerId;
 import nano.entity.ProductItem;
 import nano.entity.ProductItemId;
 import nano.ggModules.GoogleStorageModule;
+import nano.repository.FlowerRepository;
+import nano.repository.ItemRepository;
 import nano.repository.ProductFlowerRepository;
 import nano.repository.ProductItemRepository;
 import nano.repository.ProductRepository;
@@ -39,7 +43,7 @@ import nano.repository.ProductRepository;
 @Service
 public class ProductServiceImpl implements ProductService {
 	
-	private static final int PAGEMAXSIZE = 9;
+	private static final int PAGEMAXSIZE = 8;
 	
 	@Autowired
 	private ProductRepository productRepository;
@@ -49,6 +53,12 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	private ProductItemRepository piRep;
+	
+	@Autowired
+	private FlowerRepository fRep;
+	
+	@Autowired
+	private ItemRepository iRep;
 
 	@Override
 	public List<Product> findAll() {
@@ -163,11 +173,25 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Product getDetail(Integer id) {
-		Product product = productRepository.findById(id).get();
-		product.setFlowers(pfRep.findByIdProductId(id));
-		product.setItems(piRep.findByIdProductId(id));
-		System.out.println(product.getFlowers().size());
+	public ProductDTO getDetail(Integer id) {
+		ProductDTO product = productRepository.findById(id).get().toDTO();
+		List<ProductFlowerDTO> flowers = new ArrayList<ProductFlowerDTO>();
+		for (ProductFlower pf : pfRep.findByIdProductId(id)) {
+			ProductFlowerDTO dto = new ProductFlowerDTO();
+			dto.setFlower((fRep.findById(pf.getId().getFlowerId())).get().toDTO());
+			dto.setQuantity(pf.getQuantity());
+			flowers.add(dto);
+		}
+		List<ProductItemDTO> items = new ArrayList<ProductItemDTO>();
+		for (ProductItem pi : piRep.findByIdProductId(id)) {
+			ProductItemDTO dto = new ProductItemDTO();
+			dto.setItem((iRep.findById(pi.getId().getItemId())).get().toDTO());
+			dto.setQuantity(pi.getQuantity());
+			items.add(dto);
+		}
+		product.setItems(items);
+		product.setFlowers(flowers);
+		
 		return product;
 	}
 

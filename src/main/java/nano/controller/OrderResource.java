@@ -48,10 +48,10 @@ public class OrderResource {
 	}
 	
 	@PostMapping("/orders")
-	public Order addorder(@RequestBody Order order) {
+	public Integer addorder(@RequestBody Order order) {
 		order.setOrderId(0);
 		orderService.save(order);
-		return order;
+		return 200;
 	}
 	
 	@PutMapping("/orders")

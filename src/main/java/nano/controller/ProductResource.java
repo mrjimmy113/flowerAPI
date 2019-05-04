@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import nano.dto.GetAllDTO;
 import nano.dto.ProductDTO;
-import nano.entity.Product;
 import nano.entity.ProductFlower;
 import nano.entity.ProductItem;
 import nano.service.ProductService;
@@ -57,10 +56,17 @@ public class ProductResource {
 	}
 
 	@GetMapping("/{productId}")
-	public Product getProduct(@PathVariable int productId) {
-		Product product = productService.getDetail(productId);
+	public ResponseEntity<ProductDTO> getProduct(@PathVariable int productId) {
+		ProductDTO product = null;
+		HttpStatus status = null;
+		try {
+			product = productService.getDetail(productId);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
 
-		return product;
+		return new ResponseEntity<ProductDTO>(product,status);
 	}
 
 	@PostMapping

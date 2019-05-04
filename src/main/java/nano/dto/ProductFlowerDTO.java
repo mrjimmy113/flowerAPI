@@ -4,6 +4,8 @@ public class ProductFlowerDTO {
 	private ProductDTO product;
 	
 	private FlowerDTO flower;
+	
+	private int quantity;
 
 	public ProductDTO getProduct() {
 		return product;
@@ -20,6 +22,16 @@ public class ProductFlowerDTO {
 	public void setFlower(FlowerDTO flower) {
 		this.flower = flower;
 	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	
+	
 	
 	
 }
