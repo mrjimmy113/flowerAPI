@@ -1,8 +1,10 @@
 package nano.service;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,12 +17,13 @@ import nano.dto.GetAllDTO;
 import nano.entity.Account;
 import nano.exception.ResourceNotFoundException;
 import nano.repository.AccountRepository;
+import nano.utils.HelperSendEmail;
 
 @Service
 public class AccountServiceImpl implements AccountService {
 
 	private static final int PAGEMAXSIZE = 9;
-	
+
 	@Autowired
 	AccountRepository repository;
 
@@ -74,7 +77,7 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	@Override
 	public boolean deleteAccount(int id) {
-		
+
 		boolean valid = false;
 		try {
 			repository.deleteById(id);
@@ -82,7 +85,7 @@ public class AccountServiceImpl implements AccountService {
 		} catch (Exception e) {
 			valid = false;
 		}
-		
+
 		return valid;
 	}
 
@@ -106,10 +109,10 @@ public class AccountServiceImpl implements AccountService {
 
 		Account account = new Account();
 		account = repository.findByUsername(username);
-		if(account != null) {
+		if (account != null) {
 			account.setRole(role);
 		}
-		
+
 	}
 
 	@Transactional
@@ -133,9 +136,9 @@ public class AccountServiceImpl implements AccountService {
 	public Map<String, Object> getAccountInfo(String username) {
 
 		Account account = repository.findByUsername(username);
-		
+
 		Map<String, Object> obj = new HashMap<String, Object>();
-		
+
 		obj.put("name", account.getName());
 		obj.put("surname", account.getSurname());
 		obj.put("email", account.getEmail());
@@ -147,7 +150,7 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public List<Account> searchByNamePage(String name, int pageNum) {
-		Pageable pageable = PageRequest.of(pageNum -1, PAGEMAXSIZE);
+		Pageable pageable = PageRequest.of(pageNum - 1, PAGEMAXSIZE);
 		Page<Account> page = repository.findByUsernameContaining(name, pageable);
 		List<Account> listAccount = page.getContent();
 		for (Account account : listAccount) {
@@ -171,13 +174,27 @@ public class AccountServiceImpl implements AccountService {
 		acc.setMaxPage(page.getTotalPages());
 		return acc;
 	}
-	
+
 	@Transactional
 	@Override
 	public boolean forgetPass(String email) {
 		
-		
-		
-		return false;
-	}
-}
+		Account account = new Account();
+		boolean valid = false;
+		account = repository.findByEmail(email);
+		if(account != null) {
+			valid = true;
+			
+			byte[] array = new byte[7];
+		    new Random().nextBytes(array);
+		    String generatedString = new String(array, Charset.forName("UTF-8"));		 
+		    account.setEmail(generatedString);
+		    HelperSendEmail sendMail = new HelperSendEmail();
+		    sendMail.sendMail(email, "You have request a new Password" , "Your new password is: " + generatedString);
+			
+			
+			return valid;
+		}
+
+	return valid;
+}}

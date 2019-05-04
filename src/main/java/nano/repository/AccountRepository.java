@@ -20,4 +20,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
 	@Query("select p from Account p left join fetch p.orders")
 	List<Account> myFindAll();
+	
+	Account findByEmail(String email);
 }

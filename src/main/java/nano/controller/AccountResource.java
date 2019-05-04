@@ -166,4 +166,12 @@ public class AccountResource {
 		return obj;
 
 	}
+	
+	@PutMapping("/forgetPass")
+	public boolean forgetPass(@RequestParam String email) {
+		boolean valid = false;
+		valid = service.forgetPass(email);
+		
+		return valid;
+	}
 }

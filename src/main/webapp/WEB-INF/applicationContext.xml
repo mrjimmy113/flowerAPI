@@ -17,8 +17,9 @@
         http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 	<context:component-scan base-package="nano.dao" />
-	<context:component-scan
-		base-package="nano.service" />
+	<context:component-scan	base-package="nano.service" />
+	<context:component-scan	base-package="nano.utils" />
+		
 	<jpa:repositories base-package="nano.repository"/>
 
 	<bean id="dataSource"

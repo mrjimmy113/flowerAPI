@@ -36,4 +36,20 @@ public class HelperSendEmail {
         System.out.println("Sending text done!");
        
 	}
+	
+	@Autowired
+    private MailSender mailSender;
+     
+//    @Autowired
+//    private SimpleMailMessage preConfiguredMessage;
+    
+    public void sendMail(String to, String subject, String body)
+    {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(body);
+        mailSender.send(message);
+    }
+    
 }
