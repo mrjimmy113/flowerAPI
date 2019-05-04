@@ -13,13 +13,12 @@ import nano.utils.HelperSendEmail;
 
 public class CheckOutService {
 
-private OrderRepository orderRepository;
+	private OrderRepository orderRepository;
 	
 	@Autowired
 	public void setProductRepository(OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
-	}
-	
+	}	
 	
 	public void checkOut(Order order, List<OrderDetail> details) { 
 		Order orders = new Order();
@@ -32,18 +31,12 @@ private OrderRepository orderRepository;
 		orders.setOrderNo(order.getOrderDate().getTime());
 		orders.setOrderDate(new Date());
 		orders.setOrderStatus("Processing");
-		orders.setPaidDate(order.getPaidDate());
 		orders.setPaymentType(order.getPaymentType());
-		orders.setShipAddress(order.getShipAddress());
-		orders.setShipCity(order.getShipCity());
-		orders.setShipCountry(order.getShipCountry());
-		orders.setShipName(order.getShipName());
 		orders.setShippedDate(order.getShippedDate());
-		orders.setShippingFree(order.getShippingFree());
 		orderRepository.save(orders);
 		
 		HelperSendEmail helper = new HelperSendEmail();
-		helper.sendEmailOrder("", orders.getOrderNo()); // thêm emailCustomer
+		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo()); // thêm emailCustomer
 	}
 	
 	

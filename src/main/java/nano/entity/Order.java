@@ -42,29 +42,13 @@ public class Order implements Serializable {
 	
 	@Column(name="shipped_date")
 	@JsonFormat(pattern = "dd-MM-yyyy")
-    private Date shippedDate;
-	
-	@Column(name="ship_name")
-    private String shipName;
+    private Date shippedDate;	
 	
 	@Column(name="ship_address")
-    private String shipAddress;
-	
-	@Column(name="ship_city")
-    private String shipCity;
-	
-    @Column(name="ship_country")
-    private String shipCountry;
-    
-    @Column(name="shipping_fee")
-    private float shippingFree;
+    private String shipAddress;	
     
     @Column(name="payment_type")
     private String paymentType;
-    
-    @Column(name="paid_date")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date paidDate;
     
     @Column(name="order_status")
     private String orderStatus;
@@ -104,49 +88,13 @@ public class Order implements Serializable {
 	}
 	public void setShippedDate(Date shippedDate) {
 		this.shippedDate = shippedDate;
-	}
-	public String getShipName() {
-		return shipName;
-	}
-	public void setShipName(String shipName) {
-		this.shipName = shipName;
-	}
-	public String getShipAddress() {
-		return shipAddress;
-	}
-	public void setShipAddress(String shipAddress) {
-		this.shipAddress = shipAddress;
-	}
-	public String getShipCity() {
-		return shipCity;
-	}
-	public void setShipCity(String shipCity) {
-		this.shipCity = shipCity;
-	}
-	public String getShipCountry() {
-		return shipCountry;
-	}
-	public void setShipCountry(String shipCountry) {
-		this.shipCountry = shipCountry;
-	}
-	public float getShippingFree() {
-		return shippingFree;
-	}
-	public void setShippingFree(float shippingFree) {
-		this.shippingFree = shippingFree;
-	}
+	}	
 	public String getPaymentType() {
 		return paymentType;
 	}
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
-	}
-	public Date getPaidDate() {
-		return paidDate;
-	}
-	public void setPaidDate(Date paidDate) {
-		this.paidDate = paidDate;
-	}
+	}	
 	public String getOrderStatus() {
 		return orderStatus;
 	}
@@ -159,17 +107,16 @@ public class Order implements Serializable {
 
 	public void setOrderNo(long orderNo) {
 		this.orderNo = orderNo;
-	}	
+	}
 
 	@Override
 	public String toString() {
 		return "Order [orderId=" + orderId + ", account=" + account + ", orderNo=" + orderNo + ", orderDate="
-				+ orderDate + ", shippedDate=" + shippedDate + ", shipName=" + shipName + ", shipAddress=" + shipAddress
-				+ ", shipCity=" + shipCity + ", shipCountry=" + shipCountry + ", shippingFree=" + shippingFree
-				+ ", paymentType=" + paymentType + ", paidDate=" + paidDate + ", orderStatus=" + orderStatus
-				+ ", detail=" + detail + "]";
-	}
+				+ orderDate + ", shippedDate=" + shippedDate + ", shipAddress=" + shipAddress + ", paymentType="
+				+ paymentType + ", orderStatus=" + orderStatus + ", detail=" + detail + "]";
+	}	
 
+	
 	
     
 }
