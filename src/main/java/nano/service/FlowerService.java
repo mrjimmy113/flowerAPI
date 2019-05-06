@@ -19,7 +19,6 @@ import nano.entity.Flower;
  * @author LENOVO
  */
 public interface FlowerService {
-    void addFlower(Flower flower);
     void remove(int id);
     Flower getById(int id);
     GetAllDTO<FlowerDTO> findAllFlower(String searchTerm);
@@ -27,4 +26,5 @@ public interface FlowerService {
     List<FlowerDTO> getAll();
 	void modifyFlower(MultipartFile file, String dto) throws IOException;
 	FlowerDTO findOne(int id);
+	void addFlower(MultipartFile file, String dto) throws IOException;
 }

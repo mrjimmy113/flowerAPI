@@ -21,8 +21,10 @@ import com.google.gson.Gson;
 
 import nano.dto.FlowerDTO;
 import nano.dto.GetAllDTO;
+import nano.entity.Event;
 import nano.entity.Flower;
 import nano.ggModules.GoogleStorageModule;
+import nano.repository.EventRepository;
 import nano.repository.FlowerRepository;
 
 /**
@@ -36,8 +38,11 @@ public class FlowerServiceImpl implements FlowerService {
 	
 	@Autowired
 	FlowerRepository rep;
+	
+	@Autowired
+	EventRepository eRep;
 
-//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
 	@Transactional
 	@Override
 	public void remove(int id) {
@@ -63,6 +68,8 @@ public class FlowerServiceImpl implements FlowerService {
 		flower.setPrice(tmp.getPrice());
 		flower.setContent(tmp.getImageUrl());
 		flower.setFileName(tmp.getFileName());
+		Event ev = eRep.findById(tmp.getEventId()).get();
+		if(ev != null) flower.setEvent(ev);
 		if(file != null) {
 			String fileName = flower.getName().replaceAll("\\s+", "").toLowerCase()
 					+ (new java.util.Date().getTime());
@@ -73,10 +80,19 @@ public class FlowerServiceImpl implements FlowerService {
 		rep.save(flower);
 	}
 
-//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
 	@Transactional
 	@Override
-	public void addFlower(Flower flower) {
+	public void addFlower(MultipartFile file, String dto) throws IOException {
+		Gson g = new Gson();
+		FlowerDTO tmp = g.fromJson(dto, FlowerDTO.class);
+		Flower flower = new Flower();
+		flower.setName(tmp.getName());
+		flower.setPrice(tmp.getPrice());
+		String fileName = flower.getName().replaceAll("\\s+", "").toLowerCase()
+				+ (new java.util.Date().getTime());
+		flower.setFileName(fileName);
+		flower.setContent(GoogleStorageModule.upload(fileName, file.getBytes(), file.getContentType()));
 		rep.save(flower);
 	}
 

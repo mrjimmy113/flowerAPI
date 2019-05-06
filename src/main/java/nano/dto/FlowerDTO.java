@@ -5,7 +5,7 @@ import nano.entity.Flower;
 public class FlowerDTO {
 	private Integer id;
 	private String name;
-	private String eventId;
+	private Integer eventId;
 	private String imageUrl;
 	private String fileName;
 	private float price;
@@ -50,14 +50,13 @@ public class FlowerDTO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	public String getEventId() {
+	
+	public Integer getEventId() {
 		return eventId;
 	}
-	public void setEventId(String eventId) {
+	public void setEventId(Integer eventId) {
 		this.eventId = eventId;
 	}
-	
-	
 	public Flower toEntity() {
 		Flower entity = new Flower();
 		entity.setContent(imageUrl);

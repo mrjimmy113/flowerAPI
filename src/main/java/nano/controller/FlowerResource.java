@@ -96,18 +96,9 @@ public class FlowerResource {
 	@ResponseBody
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ResponseEntity<Integer> create(@RequestParam("file") MultipartFile file, @RequestParam("dto") String dto) {
-		Gson g = new Gson();
-		FlowerDTO tmp = g.fromJson(dto, FlowerDTO.class);
-		Flower flower = new Flower();
-		flower.setName(tmp.getName());
-		flower.setPrice(tmp.getPrice());
-		String fileName = flower.getName().replaceAll("\\s+", "").toLowerCase()
-				+ (new java.util.Date().getTime());
-		flower.setFileName(fileName);
-		log.info("file: " + file.getOriginalFilename());
 		try {
-			flower.setContent(GoogleStorageModule.upload(fileName, file.getBytes(), file.getContentType()));
-			service.addFlower(flower);
+			
+			service.addFlower(file,dto);
 		} catch (Exception e) {
 			log.info("ERROR: " + e.getMessage());
 			return new ResponseEntity<Integer>(400, HttpStatus.BAD_REQUEST);
