@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Component
 public class HelperSendEmail {
@@ -11,7 +12,7 @@ public class HelperSendEmail {
 	
 	
 	@Autowired
-    private MailSender smtp;
+    private MailSender mailSender;
 	
 	
 	public void sendEmailOrder(String email, long orderNo, String status) {
@@ -21,7 +22,7 @@ public class HelperSendEmail {
         message.setTo(email);
         message.setSubject("FlowerShop");
         message.setText("Your order #" + orderNo + " is " + status);
-        smtp.send(message);
+        mailSender.send(message);
         System.out.println("Sending text done!");
        
 	}
@@ -37,7 +38,7 @@ public class HelperSendEmail {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-        smtp.send(message);
+        mailSender.send(message);
     }
     
 }

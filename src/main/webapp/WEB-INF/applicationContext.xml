@@ -17,19 +17,20 @@
         http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 	<context:component-scan base-package="nano.dao" />
-	<context:component-scan	base-package="nano.service" />
-	<context:component-scan	base-package="nano.utils" />
-		
-	<jpa:repositories base-package="nano.repository"/>
+	<context:component-scan
+		base-package="nano.service" />
+	<context:component-scan
+		base-package="nano.utils" />
+
+	<jpa:repositories base-package="nano.repository" />
 
 	<bean id="dataSource"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName"
 			value="com.mysql.cj.jdbc.Driver" />
-		<property name="url"
-			value="jdbc:mysql://localhost:3306/dkm" />
+		<property name="url" value="jdbc:mysql://localhost:3306/dkm" />
 		<property name="username" value="root" />
-		<property name="password" value="123123" />
+		<property name="password" value="1234" />
 	</bean>
 
 	<bean id="entityManagerFactory"
@@ -59,22 +60,40 @@
 
 	<bean id="transactionManager"
 		class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
+		<property name="entityManagerFactory"
+			ref="entityManagerFactory" />
 	</bean>
 
-	 <bean id="smtp" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-	  	<property name="host" value="smtp.gmail.com" />
-	    <property name="username" value="nxan1811@gmail.com" />
-	    <property name="password" value="Nguyenxuanan1811" />
-	    <property name="javaMailProperties">
-	      <props>
-	        <prop key="mail.smtp.auth">true</prop>
-	        <prop key="mail.smtp.port">587</prop>
-	        <prop key="mail.smtp.starttls.enable">true</prop>
-	      </props>
-	    </property>
-  </bean>
+<!-- 	<bean id="smtp" -->
+<!-- 		class="org.springframework.mail.javamail.JavaMailSenderImpl"> -->
+<!-- 		<property name="host" value="smtp.gmail.com" /> -->
+<!-- 		<property name="username" value="nxan1811@gmail.com" /> -->
+<!-- 		<property name="password" value="Nguyenxuanan1811" /> -->
+<!-- 		<property name="javaMailProperties"> -->
+<!-- 			<props> -->
+<!-- 				<prop key="mail.smtp.auth">true</prop> -->
+<!-- 				<prop key="mail.smtp.port">587</prop> -->
+<!-- 				<prop key="mail.smtp.starttls.enable">true</prop> -->
+<!-- 			</props> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
 
+
+	<bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host"><value>smtp.gmail.com</value></property>
+        <property name="port"><value>587</value></property>
+        <property name="protocol"><value>smtp</value></property>
+        <property name="username"><value>nxan1811@gmail.com</value></property>
+        <property name="password"><value>Nguyenxuanan1811</value></property>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.quitwait">false</prop>
+            </props>
+        </property>
+	</bean>
 
 
 </beans>
