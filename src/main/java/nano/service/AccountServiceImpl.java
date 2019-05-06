@@ -1,18 +1,18 @@
 package nano.service;
 
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javassist.NotFoundException;
 import nano.dto.GetAllDTO;
 import nano.entity.Account;
 import nano.exception.ResourceNotFoundException;
@@ -145,23 +145,6 @@ public class AccountServiceImpl implements AccountService {
 		return false;
 	}
 
-	@Transactional
-	@Override
-	public Map<String, Object> getAccountInfo(String username) {
-
-		Account account = repository.findByUsername(username);
-
-		Map<String, Object> obj = new HashMap<String, Object>();
-
-		obj.put("name", account.getName());
-		obj.put("surname", account.getSurname());
-		obj.put("email", account.getEmail());
-		obj.put("telephone", account.getTelephone());
-		obj.put("address", account.getAddress());
-
-		return obj;
-	}
-
 	@Override
 	public List<Account> searchByNamePage(String name, int pageNum) {
 		Pageable pageable = PageRequest.of(pageNum - 1, PAGEMAXSIZE);
@@ -192,23 +175,69 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	@Override
 	public boolean forgetPass(String email) {
-		
+
 		Account account = new Account();
 		boolean valid = false;
 		account = repository.findByEmail(email);
-		if(account != null) {
+		if (account != null) {
 			valid = true;
-			
+
 			byte[] array = new byte[7];
-		    new Random().nextBytes(array);
-		    String generatedString = new String(array, Charset.forName("UTF-8"));		 
-		    account.setEmail(generatedString);
-		    HelperSendEmail sendMail = new HelperSendEmail();
-		    sendMail.sendMail(email, "You have request a new Password" , "Your new password is: " + generatedString);
-			
-			
+			new Random().nextBytes(array);
+			String generatedString = new String(array, Charset.forName("UTF-8"));
+			account.setEmail(generatedString);
+			HelperSendEmail sendMail = new HelperSendEmail();
+			sendMail.sendMail(email, "You have request a new Password", "Your new password is: " + generatedString);
+
 			return valid;
 		}
 
-	return valid;
-}}
+		return valid;
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Account getAccountInfor() {
+		Account acc = null;
+		if (SecurityContextHolder.getContext().getAuthentication() != null) {
+			acc = repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+			acc.setOrders(null);
+			acc.setPassword(null);
+		}
+
+		return acc;
+	}
+
+	
+	@Transactional
+	@Override
+	public void updateAccountInfor(Account account) {
+		Account tmp = repository.findById(account.getId()).get();
+		if(tmp != null) {
+			tmp.setEmail(account.getEmail());
+			tmp.setName(account.getName());
+			tmp.setSurname(account.getSurname());
+			tmp.setTelephone(account.getTelephone());
+			System.out.println(tmp.getPassword());
+			repository.save(tmp);
+		}
+	}
+	
+	@Override
+	public void changePassword(String oldP, String newP) throws NotFoundException {
+		Account acc = null;
+		if(oldP.equals(newP)) return;
+		if (SecurityContextHolder.getContext().getAuthentication() != null) {
+			acc = repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+			if(!acc.getPassword().equals(oldP)) {
+				throw new NotFoundException("msg");
+			}else {
+				acc.setPassword(newP);
+				repository.save(acc);
+			}
+		}
+
+	}
+	
+	
+}

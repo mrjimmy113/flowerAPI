@@ -1,8 +1,6 @@
 package nano.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javassist.NotFoundException;
 import nano.dto.AccountDTO;
 import nano.dto.GetAllDTO;
 import nano.dto.TokenDTO;
@@ -45,6 +44,7 @@ public class AccountResource {
 			tokenDto.setTokenValue(token);
 			Account acc = service.getAccountByUsername(dto.getUsername());
 			tokenDto.setName(acc.getName() + " "  + acc.getSurname());
+			tokenDto.setRole(acc.getRole());
 
 		} else {
 			httpStatus = HttpStatus.BAD_REQUEST;
@@ -54,7 +54,7 @@ public class AccountResource {
 
 	}
 	
-	@GetMapping(value = "/acc",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping(value = "/admin/acc",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<GetAllDTO<Account>> getAllItem(@RequestParam String searchTerm) {
 		GetAllDTO<Account> item = null;
 		HttpStatus status = null;
@@ -67,7 +67,7 @@ public class AccountResource {
 		return new ResponseEntity<GetAllDTO<Account>>(item, status);
 	}
 	
-	@GetMapping(value = "/acc/search",produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/admin/acc/search",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Account>> searchWithPage(@RequestParam String searchTerm, @RequestParam int pageNum) {
 		List<Account> items = null;
 		HttpStatus status = null;
@@ -80,13 +80,6 @@ public class AccountResource {
 		return new ResponseEntity<List<Account>>(items,status);
 	}
 	
-	@GetMapping("/all")
-	public List<Account> all() {
-		
-		List<Account> listAccount = service.all();
-		
-		return listAccount;
-	}
 
 	@PostMapping("/acc")
 	public Integer newAccount(@RequestBody Account newAccount) {
@@ -100,17 +93,8 @@ public class AccountResource {
 		return status.value();
 	}
 
-	@GetMapping("get/{id}")
-	public Account one(@PathVariable("id") int id) throws ResourceNotFoundException {
-		return service.one(id);
-	}
 
-	@PutMapping("/put/{id}")
-	public Account replaceAccount(@RequestBody Account newAccount, @PathVariable("id") int id) {
-		return service.replaceAccount(newAccount, id);
-	}
-
-	@DeleteMapping("/acc/{id}")
+	@DeleteMapping("/admin/acc/{id}")
 	public Integer deleteAccount(@PathVariable int id) {			
 		HttpStatus status = null;
 		try {
@@ -133,7 +117,7 @@ public class AccountResource {
 		return service.checkUsernameExist(email);
 	}
 
-	@PutMapping("/acc/updateAccountRole")
+	@PutMapping("/admin/acc/updateAccountRole")
 	public Integer updateAccountRole(@RequestParam("username") String username, @RequestParam("role") String role) {		
 		HttpStatus status = null;
 		try {
@@ -146,30 +130,11 @@ public class AccountResource {
 		return status.value();
 	}
 	
-//	@PutMapping("/updateAccountPassword?username={username}&pass={pass}")
-//	public Integer updateAccountPassword(@PathVariable("username") String username, @PathVariable("pass") String pass) {		
-//		HttpStatus status = null;
-//		boolean valid;
-//		valid = service.updateAccountRole(username, pass);
-//
-//		if (valid == true) {
-//			status = HttpStatus.OK;
-//		} else {
-//			status = HttpStatus.BAD_REQUEST;
-//		}
-//
-//		return status.value();
-//	}
 	
-	@GetMapping("/getAccountInfo/{username}")
-	public Map<String, Object> getAccountInfo(@PathVariable("username") String username) {
-
-		Map<String, Object> obj = new HashMap<String, Object>();
-		
-		obj = service.getAccountInfo(username);
-	    
-		return obj;
-
+	
+	@GetMapping("/user/acc/getAccountInfo")
+	public Account getAccountInfo() {
+		return service.getAccountInfor();
 	}
 	
 	@PutMapping("/forgetPass")
@@ -179,4 +144,26 @@ public class AccountResource {
 		
 		return valid;
 	}
+	
+	@PostMapping("/user/acc/updateProfile")
+	public Account updateProle(@RequestBody Account account) {
+		System.out.println("update Profile");
+		service.updateAccountInfor(account);
+		return service.getAccountInfor();
+	}
+	
+	@PostMapping("/user/acc/changePass")
+	public Integer changePass(@RequestParam("oldP") String oldP, @RequestParam("newP") String newP) {
+		HttpStatus status = null;
+		try {
+			service.changePassword(oldP, newP);
+			status = HttpStatus.OK;
+		} catch (NotFoundException e) {
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return status.value();
+	}
+	
 }

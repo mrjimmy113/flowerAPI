@@ -14,4 +14,6 @@ public interface OrderService  {
 	List<Order> searchByNamePage(Long from, Long to, int pageNum);
 	GetAllDTO<Order> findAllItem(Long from, Long to);
 	void checkOut(Order order) throws Exception;
+	void completeOrder(int id);
+	void cancelOrder(int id);
 }

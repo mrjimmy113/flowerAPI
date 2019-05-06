@@ -86,4 +86,28 @@ public class OrderResource {
 		return new ResponseEntity<Integer>(status.value(), status);
 	}
 	
+	@PutMapping("/orders/complete")
+	public ResponseEntity<Integer> completeOrder(@RequestParam("id") Integer id) {
+		HttpStatus status = null;
+		try {
+			orderService.completeOrder(id);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<Integer>(status.value(),status);
+	}
+	
+	@PutMapping("/orders/cancel")
+	public ResponseEntity<Integer> cancelOrder(@RequestParam("id") Integer id) {
+		HttpStatus status = null;
+		try {
+			orderService.cancelOrder(id);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<Integer>(status.value(),status);
+	}
+	
 }

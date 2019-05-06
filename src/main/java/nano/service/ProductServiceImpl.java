@@ -195,4 +195,35 @@ public class ProductServiceImpl implements ProductService {
 		return product;
 	}
 
+	@Override
+	public List<ProductDTO> pageByFlowerOrEvent(Integer event, Integer flower, int pageNum) {
+		Pageable pageable = PageRequest.of(pageNum -1, PAGEMAXSIZE);
+		Page<Product> page = null;
+		if((event == 0) && (flower != 0)) page = productRepository.findByFlower(flower, pageable);
+		if((event !=0) && (flower == 0)) page = productRepository.findByEvent(event, pageable);
+		if((event !=0) && (flower !=0)) page = productRepository.findByFlowerAndEvent(event, flower, pageable);
+		List<ProductDTO> dtos = new ArrayList<ProductDTO>();
+		for (Product product : page.getContent()) {
+			dtos.add(product.toDTO());
+		}
+		return dtos;
+	}
+
+	@Override
+	public GetAllDTO<ProductDTO> searchByFlowerOrEvent(Integer event, Integer flower) {
+		Pageable pageable = PageRequest.of(0, PAGEMAXSIZE);
+		Page<Product> page = null;
+		if((event == 0) && (flower != 0)) page = productRepository.findByFlower(flower, pageable);
+		if((event !=0) && (flower == 0)) page = productRepository.findByEvent(event, pageable);
+		if((event !=0) && (flower !=0)) page = productRepository.findByFlowerAndEvent(event, flower, pageable);
+		GetAllDTO<ProductDTO> dto = new GetAllDTO<ProductDTO>();
+		List<ProductDTO> dtos = new ArrayList<ProductDTO>();
+		for (Product product : page.getContent()) {
+			dtos.add(product.toDTO());
+		}
+		dto.setMaxPage(page.getTotalPages());
+		dto.setList(dtos);
+		return dto;
+	}
+
 }

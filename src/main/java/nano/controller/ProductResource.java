@@ -54,6 +54,34 @@ public class ProductResource {
 		}
 		return new ResponseEntity<List<ProductDTO>>(items,status);
 	}
+	
+	@GetMapping(value = "/searchBy",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<GetAllDTO<ProductDTO>> searchByFlowerEvent(@RequestParam Integer event, @RequestParam Integer flower) {
+		HttpStatus status = null;
+		GetAllDTO<ProductDTO> dto = null;
+		try {
+			dto = productService.searchByFlowerOrEvent(event, flower);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<GetAllDTO<ProductDTO>>(dto,status);
+	}
+	
+	@GetMapping(value = "/searchByPage")
+	public ResponseEntity<List<ProductDTO>> pageByFlowerEvent(@RequestParam Integer event, @RequestParam Integer flower, @RequestParam int pageNum) {
+		List<ProductDTO> items = null;
+		HttpStatus status = null;
+		try {	
+			items = productService.pageByFlowerOrEvent(event, flower, pageNum);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<List<ProductDTO>>(items,status);
+	}
 
 	@GetMapping("/{productId}")
 	public ResponseEntity<ProductDTO> getProduct(@PathVariable int productId) {

@@ -42,4 +42,8 @@ public interface ProductService {
 	void updateProduct(MultipartFile file, String json) throws IOException;
 	
 	ProductDTO getDetail(Integer id);
+	
+	List<ProductDTO> pageByFlowerOrEvent(Integer event, Integer flower, int pageNum);
+	
+	GetAllDTO<ProductDTO> searchByFlowerOrEvent(Integer event, Integer flower);
 }

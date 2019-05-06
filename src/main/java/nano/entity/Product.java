@@ -17,7 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import nano.dto.ProductDTO;
 
@@ -64,7 +63,6 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
 	private List<ProductItem> items = new ArrayList<ProductItem>();
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Evaluate> evaluates = new ArrayList<>();
 	

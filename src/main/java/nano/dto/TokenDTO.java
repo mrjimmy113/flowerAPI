@@ -3,6 +3,7 @@ package nano.dto;
 public class TokenDTO {
 	private String tokenValue;
 	private String name;
+	private String role;
 
 	public String getTokenValue() {
 		return tokenValue;
@@ -19,8 +20,12 @@ public class TokenDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
-	
-	
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}	
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.MailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import nano.repository.FlowerRepository;
 import nano.repository.ItemRepository;
 import nano.repository.OrderDetailRepository;
 import nano.repository.OrderRepository;
+import nano.utils.HelperSendEmail;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -155,9 +157,34 @@ public class OrderServiceImpl implements OrderService {
 		orders.setPaymentType(order.getPaymentType());
 		orders.setShippedDate(order.getShippedDate());
 		orderRepository.save(orders);
-//		HelperSendEmail helper = new HelperSendEmail();
-//		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo()); // thêm emailCustomer
+		HelperSendEmail helper = new HelperSendEmail();
+		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo(), order.getOrderStatus()); 
 	}
+	
+	@Autowired
+	HelperSendEmail helper;
+	
+	
+	@Override
+	public void completeOrder(int id) {
+		System.out.println(helper);
+		Order tmp = orderRepository.findById(id).get();
+		tmp.setOrderStatus("COMPLETE");
+		Account acc =accRep.findByOrderId(tmp.getOrderId()); 
+		orderRepository.save(tmp);
+		helper.sendEmailOrder(acc.getEmail(), tmp.getOrderNo(), tmp.getOrderStatus());
+	}
+	
+	@Override
+	public void cancelOrder(int id) {
+		Order tmp = orderRepository.findById(id).get();
+		tmp.setOrderStatus("CANCEL");
+		Account acc =accRep.findByOrderId(tmp.getOrderId()); 
+		orderRepository.save(tmp);
+		helper.sendEmailOrder(acc.getEmail(), tmp.getOrderNo(), tmp.getOrderStatus());
+	}
+	
+	
 
 
 }
