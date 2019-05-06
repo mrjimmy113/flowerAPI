@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ public class ProductResource {
 	ProductService productService;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<GetAllDTO<ProductDTO>> getAllProduct(@RequestParam String searchTerm) {
 		HttpStatus status = null;
 		GetAllDTO<ProductDTO> dto = null;
@@ -42,6 +44,7 @@ public class ProductResource {
 	}
 	
 	@GetMapping(value = "/search")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<List<ProductDTO>> searchWithPage(@RequestParam String searchTerm, @RequestParam int pageNum) {
 		List<ProductDTO> items = null;
 		HttpStatus status = null;
@@ -84,6 +87,7 @@ public class ProductResource {
 	}
 
 	@GetMapping("/{productId}")
+	
 	public ResponseEntity<ProductDTO> getProduct(@PathVariable int productId) {
 		ProductDTO product = null;
 		HttpStatus status = null;
@@ -98,6 +102,7 @@ public class ProductResource {
 	}
 
 	@PostMapping
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ResponseEntity<Integer> addProduct(@RequestParam("file") MultipartFile file, @RequestParam("product") String product) {
 		HttpStatus status = null;
 		try {
@@ -112,6 +117,7 @@ public class ProductResource {
 	}
 
 	@PostMapping("/update")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<Integer> update(@RequestParam(name = "file", required = false) MultipartFile file, @RequestParam("product") String product) {
 		System.out.println("Update" + file);
 		HttpStatus status = null;
@@ -128,6 +134,7 @@ public class ProductResource {
 	}
 
 	@DeleteMapping("/{productId}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ResponseEntity<Integer> deleteProduct(@PathVariable int productId) {
 		HttpStatus status = null;
 		try {

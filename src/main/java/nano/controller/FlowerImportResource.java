@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ public class FlowerImportResource {
 	FlowerImportService service;
 
 	@PostMapping()
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<Integer> newImport(@RequestBody FlowerImportDTO dto) {
 		HttpStatus status = null;
 		try {
@@ -36,6 +38,7 @@ public class FlowerImportResource {
 	}
 	
 	@GetMapping()
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<GetAllDTO<FlowerImportDTO>> getAll(@RequestParam Long from, @RequestParam Long to) {
 		HttpStatus status = null;
 		System.out.println("FlowerImport");
@@ -52,6 +55,7 @@ public class FlowerImportResource {
 	}
 	
 	@GetMapping(value = "/search")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<List<FlowerImportDTO>> getPage (@RequestParam Long from, @RequestParam Long to, @RequestParam int numPage) {
 		HttpStatus status = null;
 		List<FlowerImportDTO> dtos = null;

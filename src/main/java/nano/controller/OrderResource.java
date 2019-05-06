@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,11 +32,13 @@ public class OrderResource {
 	}
 	
 	@GetMapping("/orders")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public GetAllDTO<Order> getAllorder(@RequestParam Long from, @RequestParam Long to) {
 		return orderService.findAllItem(from, to);
 	}
 	
 	@GetMapping(value = "/orders/search")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public List<Order> searchWithPage(@RequestParam Long from,@RequestParam Long to, @RequestParam int pageNum) {
 		List<Order> orders = null;		
 		orders = orderService.searchByNamePage(from, to, pageNum);
@@ -43,12 +46,14 @@ public class OrderResource {
 	}
 	
 	@GetMapping("/orders/{orderId}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public Order getorder(@PathVariable int orderId) {
 		Order order = orderService.findById(orderId);		
 		return order;
 	}
 	
 	@PostMapping("/orders")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP','ROLE_USER')")
 	public Integer addorder(@RequestBody Order order) {
 		HttpStatus status = null;
 		try {
@@ -62,6 +67,7 @@ public class OrderResource {
 	}
 	
 	@PutMapping("/orders")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<Integer> updateorder(@RequestBody Order order) {
 		HttpStatus status = null;
 		try {
@@ -75,6 +81,7 @@ public class OrderResource {
 	}
 	
 	@DeleteMapping("/orders/{orderId}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ResponseEntity<Integer> deleteorder(@PathVariable int orderId) {		
 		HttpStatus status = null;
 		try {
@@ -87,6 +94,7 @@ public class OrderResource {
 	}
 	
 	@PutMapping("/orders/complete")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<Integer> completeOrder(@RequestParam("id") Integer id) {
 		HttpStatus status = null;
 		try {
@@ -99,6 +107,7 @@ public class OrderResource {
 	}
 	
 	@PutMapping("/orders/cancel")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<Integer> cancelOrder(@RequestParam("id") Integer id) {
 		HttpStatus status = null;
 		try {
