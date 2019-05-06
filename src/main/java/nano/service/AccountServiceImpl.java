@@ -32,6 +32,9 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	JwtService jwt;
 
+	@Autowired
+	HelperSendEmail sendMail;
+	
 	@Override
 	public String login(String username, String password) {
 		Account acc = repository.findByUsernameAndPassword(username, password);
@@ -186,12 +189,18 @@ public class AccountServiceImpl implements AccountService {
 		if (account != null) {
 			valid = true;
 
-			byte[] array = new byte[7];
-			new Random().nextBytes(array);
-			String generatedString = new String(array, Charset.forName("UTF-8"));
-			account.setEmail(generatedString);
-			HelperSendEmail sendMail = new HelperSendEmail();
-			sendMail.sendMail(email, "You have request a new Password", "Your new password is: " + generatedString);
+			String SETCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+	        StringBuilder strb = new StringBuilder();
+	        Random rnd = new Random();
+	        
+	        while (strb.length() < 18) { // length of the random string.
+	            int index = (int) (rnd.nextFloat() * SETCHARS.length());
+	            strb.append(SETCHARS.charAt(index));
+	        }
+	        String str = strb.toString();
+	        
+			account.setPassword(str);
+			sendMail.sendMail(email, "You have request a new Password", "Your new password is: " + str);
 
 			return valid;
 		}
