@@ -102,6 +102,20 @@ public class AccountServiceImpl implements AccountService {
 
 		return false;
 	}
+	
+	@Transactional
+	@Override
+	public boolean checkEmailExist(String email) {
+
+		Account account = new Account();
+		account = repository.findByEmail(email);
+
+		if (account != null) {
+			return true;
+		}
+
+		return false;
+	}
 
 	@Transactional
 	@Override

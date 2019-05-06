@@ -127,6 +127,11 @@ public class AccountResource {
 	public boolean checkUsernameExist(@PathVariable("username") String username) {
 		return service.checkUsernameExist(username);
 	}
+	
+	@GetMapping("/acc/checkUsernameExist")
+	public boolean checkEmailExist(@RequestParam String email) {
+		return service.checkUsernameExist(email);
+	}
 
 	@PutMapping("/acc/updateAccountRole")
 	public Integer updateAccountRole(@RequestParam("username") String username, @RequestParam("role") String role) {		

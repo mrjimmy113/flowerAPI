@@ -24,6 +24,8 @@ public interface AccountService  {
 	
 	boolean checkUsernameExist(String username);
 	
+	boolean checkEmailExist(String email);
+	
 	void updateAccountRole(String username, String role);
 	
 	boolean updateAccountPassword(String username, String pass);
