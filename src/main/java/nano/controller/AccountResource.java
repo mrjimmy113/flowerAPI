@@ -112,9 +112,9 @@ public class AccountResource {
 		return service.checkUsernameExist(username);
 	}
 	
-	@GetMapping("/acc/checkUsernameExist")
+	@GetMapping("/acc/checkEmailExist")
 	public boolean checkEmailExist(@RequestParam String email) {
-		return service.checkUsernameExist(email);
+		return service.checkEmailExist(email);
 	}
 
 	@PutMapping("/admin/acc/updateAccountRole")
