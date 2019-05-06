@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -145,6 +147,7 @@ public class AccountServiceImpl implements AccountService {
 		return false;
 	}
 
+	@PostFilter("filterObject.username != authentication.principal.username")
 	@Override
 	public List<Account> searchByNamePage(String name, int pageNum) {
 		Pageable pageable = PageRequest.of(pageNum - 1, PAGEMAXSIZE);
@@ -157,6 +160,7 @@ public class AccountServiceImpl implements AccountService {
 		return listAccount;
 	}
 
+	
 	@Override
 	public GetAllDTO<Account> findAllItem(String searchTerm) {
 		Pageable pageable = PageRequest.of(0, PAGEMAXSIZE);
@@ -167,7 +171,7 @@ public class AccountServiceImpl implements AccountService {
 			account.setOrders(null);
 		}
 		GetAllDTO<Account> acc = new GetAllDTO<Account>();
-		acc.setList(listAccount);
+		acc.setList(this.searchByNamePage(searchTerm, 1));
 		acc.setMaxPage(page.getTotalPages());
 		return acc;
 	}

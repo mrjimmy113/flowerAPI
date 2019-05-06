@@ -1,11 +1,13 @@
 package nano.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +25,6 @@ import nano.dto.AccountDTO;
 import nano.dto.GetAllDTO;
 import nano.dto.TokenDTO;
 import nano.entity.Account;
-import nano.exception.ResourceNotFoundException;
 import nano.service.AccountService;
 
 @RestController
@@ -55,6 +56,7 @@ public class AccountResource {
 	}
 	
 	@GetMapping(value = "/admin/acc",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<GetAllDTO<Account>> getAllItem(@RequestParam String searchTerm) {
 		GetAllDTO<Account> item = null;
 		HttpStatus status = null;
@@ -62,12 +64,16 @@ public class AccountResource {
 			item = service.findAllItem(searchTerm);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			status = HttpStatus.BAD_REQUEST;
+			item = new GetAllDTO<Account>();
+			item.setList(new ArrayList<Account>());
 		}
 		return new ResponseEntity<GetAllDTO<Account>>(item, status);
 	}
 	
 	@GetMapping(value = "/admin/acc/search",produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<List<Account>> searchWithPage(@RequestParam String searchTerm, @RequestParam int pageNum) {
 		List<Account> items = null;
 		HttpStatus status = null;
@@ -76,6 +82,7 @@ public class AccountResource {
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			status = HttpStatus.BAD_REQUEST;
+			items = new ArrayList<Account>();
 		}
 		return new ResponseEntity<List<Account>>(items,status);
 	}
@@ -95,6 +102,7 @@ public class AccountResource {
 
 
 	@DeleteMapping("/admin/acc/{id}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public Integer deleteAccount(@PathVariable int id) {			
 		HttpStatus status = null;
 		try {
@@ -118,6 +126,7 @@ public class AccountResource {
 	}
 
 	@PutMapping("/admin/acc/updateAccountRole")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public Integer updateAccountRole(@RequestParam("username") String username, @RequestParam("role") String role) {		
 		HttpStatus status = null;
 		try {
@@ -133,6 +142,7 @@ public class AccountResource {
 	
 	
 	@GetMapping("/user/acc/getAccountInfo")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_EMP')")
 	public Account getAccountInfo() {
 		return service.getAccountInfor();
 	}
@@ -146,6 +156,7 @@ public class AccountResource {
 	}
 	
 	@PostMapping("/user/acc/updateProfile")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_EMP')")
 	public Account updateProle(@RequestBody Account account) {
 		System.out.println("update Profile");
 		service.updateAccountInfor(account);
@@ -153,6 +164,7 @@ public class AccountResource {
 	}
 	
 	@PostMapping("/user/acc/changePass")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_EMP')")
 	public Integer changePass(@RequestParam("oldP") String oldP, @RequestParam("newP") String newP) {
 		HttpStatus status = null;
 		try {

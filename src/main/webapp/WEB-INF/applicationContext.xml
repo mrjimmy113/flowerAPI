@@ -30,7 +30,7 @@
 			value="com.mysql.cj.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/dkm" />
 		<property name="username" value="root" />
-		<property name="password" value="1234" />
+		<property name="password" value="123123" />
 	</bean>
 
 	<bean id="entityManagerFactory"

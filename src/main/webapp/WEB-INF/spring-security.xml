@@ -28,12 +28,12 @@
 
 	<http pattern="/**" auto-config="false" use-expressions="true"
 		create-session="stateless" entry-point-ref="restServicesEntryPoint">
-		
+		<!--
 		<intercept-url pattern="/admin/**"
 			access="hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMP')" />
 		
 		<intercept-url pattern="/user/**"
-			access="hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMP') or hasAuthority('ROLE_USER')" />
+			access="hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMP') or hasAuthority('ROLE_USER')" />-->
 		
 		<custom-filter position="FORM_LOGIN_FILTER"
 			ref="jwtAuthenticationFilter" />
