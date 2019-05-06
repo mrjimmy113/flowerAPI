@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +44,7 @@ public class EventResource {
 	}
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ResponseEntity<Integer> create(@RequestBody EventDTO dto) {
 		HttpStatus status;
 		try {
@@ -56,6 +58,7 @@ public class EventResource {
 	}
 	
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<Integer> update(@RequestBody EventDTO dto) {
 		HttpStatus status;
 		try {
@@ -69,6 +72,7 @@ public class EventResource {
 	}
 	
 	@DeleteMapping(value = "/{id}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ResponseEntity<Integer> delete(@PathVariable("id") Integer id) {
 		HttpStatus status;
 		try {

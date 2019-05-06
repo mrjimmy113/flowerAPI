@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +29,7 @@ public class BannerResource {
 	}
 
 	@PostMapping("/admin/banner")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public Integer newBanner(@RequestParam("file") MultipartFile file) {
 		HttpStatus status;
 		try {
@@ -41,11 +42,13 @@ public class BannerResource {
 	}
 
 	@GetMapping("/{id}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public Banner one(@PathVariable("id") int id) throws ResourceNotFoundException{
 		return service.one(id);
 	}
 
 	@DeleteMapping("/admin/banner/{id}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public Integer deleteBanner(@PathVariable int id) {
 		HttpStatus status;
 		try {
