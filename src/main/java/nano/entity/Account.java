@@ -46,6 +46,9 @@ public class Account {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
 	private List<Order> orders;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
+	private List<Evaluate> evaluates;
 
 	public Integer getId() {
 		return id;

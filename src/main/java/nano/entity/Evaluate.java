@@ -30,7 +30,7 @@ public class Evaluate {
 	private Product product;
 	
 	@Column
-	private String userId;
+	private String username;
 
 	@Column
 	private String comment;
