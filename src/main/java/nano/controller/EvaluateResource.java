@@ -17,7 +17,6 @@ import nano.exception.ResourceNotFoundException;
 import nano.service.EvaluateService;
 
 @RestController
-@RequestMapping("/api/evaluate")
 public class EvaluateResource {
 
 	@Autowired
@@ -43,7 +42,7 @@ public class EvaluateResource {
 	    return service.replaceEvaluate(newEvaluate, id);
 	  }
 	
-	 @DeleteMapping("/delete/{id}")
+	 @DeleteMapping("/admin/eveluate/{id}")
 	  void deleteEvaluate(@PathVariable int id) {
 	    service.deleteEvaluate(id);
 	  }

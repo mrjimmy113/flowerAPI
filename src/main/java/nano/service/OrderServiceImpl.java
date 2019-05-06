@@ -48,9 +48,9 @@ public class OrderServiceImpl implements OrderService {
 	OrderDetailRepository dRep;
 	
 	@Autowired
-	public void setProductRepository(OrderRepository orderRepository) {
-		this.orderRepository = orderRepository;
-	}
+	HelperSendEmail helper;
+	
+
 	
 	@Override
 	public List<Order> findAll() {
@@ -157,12 +157,10 @@ public class OrderServiceImpl implements OrderService {
 		orders.setPaymentType(order.getPaymentType());
 		orders.setShippedDate(order.getShippedDate());
 		orderRepository.save(orders);
-		HelperSendEmail helper = new HelperSendEmail();
 		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo(), order.getOrderStatus()); 
 	}
 	
-	@Autowired
-	HelperSendEmail helper;
+	
 	
 	
 	@Override
