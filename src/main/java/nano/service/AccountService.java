@@ -1,8 +1,8 @@
 package nano.service;
 
 import java.util.List;
-import java.util.Map;
 
+import javassist.NotFoundException;
 import nano.dto.GetAllDTO;
 import nano.entity.Account;
 import nano.exception.ResourceNotFoundException;
@@ -28,10 +28,15 @@ public interface AccountService  {
 	
 	boolean updateAccountPassword(String username, String pass);
 	
-	Map<String, Object> getAccountInfo(String username);
 	
 	List<Account> searchByNamePage(String name,int pageNum);
 	GetAllDTO<Account> findAllItem(String searchTerm);
 	
 	boolean forgetPass(String email);
+	
+	Account getAccountInfor();
+
+	void updateAccountInfor(Account account);
+
+	void changePassword(String oldP, String newP) throws NotFoundException;
 }

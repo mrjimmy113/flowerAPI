@@ -18,18 +18,17 @@ import nano.exception.ResourceNotFoundException;
 import nano.service.BannerService;
 
 @RestController
-@RequestMapping("/admin/banner")
 public class BannerResource {
 
 	@Autowired
 	private BannerService service;
 
-	@GetMapping
+	@GetMapping("/banner")
 	public List<Banner> all() {
 		return service.all();
 	}
 
-	@PostMapping
+	@PostMapping("/admin/banner")
 	public Integer newBanner(@RequestParam("file") MultipartFile file) {
 		HttpStatus status;
 		try {
@@ -46,7 +45,7 @@ public class BannerResource {
 		return service.one(id);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/admin/banner/{id}")
 	public Integer deleteBanner(@PathVariable int id) {
 		HttpStatus status;
 		try {
