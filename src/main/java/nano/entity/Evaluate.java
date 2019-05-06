@@ -28,6 +28,9 @@ public class Evaluate {
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
+	
+	@Column
+	private String userId;
 
 	@Column
 	private String comment;
