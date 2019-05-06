@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,6 +64,7 @@ public class FlowerResource {
 
 	@RequestMapping(value = "/flower", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<GetAllDTO<FlowerDTO>> findAll(@RequestParam String searchTerm) {
 		HttpStatus status = null;
 		GetAllDTO<FlowerDTO> dto = null;
@@ -77,6 +79,7 @@ public class FlowerResource {
 	}
 
 	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<List<FlowerDTO>> searchWithPage(@RequestParam String searchTerm, @RequestParam int pageNum) {
 		List<FlowerDTO> dtos = null;
 		HttpStatus status = null;
@@ -91,6 +94,7 @@ public class FlowerResource {
 
 	@RequestMapping(value = "/flower", method = RequestMethod.POST, consumes = { MediaType.ALL_VALUE })
 	@ResponseBody
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ResponseEntity<Integer> create(@RequestParam("file") MultipartFile file, @RequestParam("dto") String dto) {
 		Gson g = new Gson();
 		FlowerDTO tmp = g.fromJson(dto, FlowerDTO.class);
@@ -114,6 +118,7 @@ public class FlowerResource {
 
 	@RequestMapping(value = "/flower/update", method = RequestMethod.POST, consumes = { MediaType.ALL_VALUE })
 	@ResponseBody
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<Integer> updateFile(@RequestParam(name = "file", required = false) MultipartFile file,
 			@RequestParam("dto") String dto) {
 
@@ -133,6 +138,7 @@ public class FlowerResource {
 	@RequestMapping(value = "/flower/{id}", method = RequestMethod.DELETE, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ResponseEntity<Integer> delete(@PathVariable("id") int id) {
 		try {
 			service.remove(id);

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ public class ItemResource {
 	ItemService service;
 
 	@GetMapping("/all")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<List<ItemDTO>> findAll() {
 		List<ItemDTO> dtos = null;
 		HttpStatus status = null;
@@ -41,6 +43,7 @@ public class ItemResource {
 	}
 	
 	@GetMapping("/one")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<ItemDTO> findOne(@RequestParam("id") int id) {
 		HttpStatus status = null;
 		ItemDTO dto = null;
@@ -54,6 +57,7 @@ public class ItemResource {
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<GetAllDTO<ItemDTO>> getAllItem(@RequestParam String searchTerm) {
 		GetAllDTO<ItemDTO> item;
 		try {	
@@ -65,6 +69,7 @@ public class ItemResource {
 	}
 	
 	@GetMapping(value = "/search",produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<List<ItemDTO>> searchWithPage(@RequestParam String searchTerm, @RequestParam int pageNum) {
 		List<ItemDTO> items = null;
 		HttpStatus status = null;
@@ -78,6 +83,7 @@ public class ItemResource {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ResponseEntity<Integer> create(@RequestBody ItemDTO dto) {
 		HttpStatus status;
 		System.out.println("CREATE");
@@ -92,6 +98,7 @@ public class ItemResource {
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<Integer> update(@RequestBody ItemDTO dto) {
 		HttpStatus status;
 		try {
@@ -105,6 +112,7 @@ public class ItemResource {
 	}
 
 	@DeleteMapping(value = "/{id}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ResponseEntity<Integer> delete(@PathVariable("id") Integer id) {
 		HttpStatus status;
 		try {
