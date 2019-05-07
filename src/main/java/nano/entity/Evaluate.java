@@ -71,4 +71,14 @@ public class Evaluate {
 		this.rating = rating;
 	}
 
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+	
+	
+
 }

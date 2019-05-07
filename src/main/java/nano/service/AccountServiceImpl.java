@@ -1,6 +1,5 @@
 package nano.service;
 
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Random;
 
@@ -9,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -227,7 +225,7 @@ public class AccountServiceImpl implements AccountService {
 	public void updateAccountInfor(Account account) {
 		Account tmp = repository.findById(account.getId()).get();
 		if(tmp != null) {
-			tmp.setEmail(account.getEmail());
+			tmp.setAddress(account.getAddress());
 			tmp.setName(account.getName());
 			tmp.setSurname(account.getSurname());
 			tmp.setTelephone(account.getTelephone());

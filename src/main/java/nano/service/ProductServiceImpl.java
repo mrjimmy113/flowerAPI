@@ -225,5 +225,14 @@ public class ProductServiceImpl implements ProductService {
 		dto.setList(dtos);
 		return dto;
 	}
+	
+	@Override
+	public List<ProductDTO> top8NewProduct() {
+		List<ProductDTO> dtos = new ArrayList<ProductDTO>();
+		for (Product p : productRepository.findTop10ByOrderByCreatedDesc()) {
+			dtos.add(p.toDTO());
+		}
+		return dtos;
+	}
 
 }

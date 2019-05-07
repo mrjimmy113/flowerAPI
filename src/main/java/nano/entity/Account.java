@@ -9,7 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -47,6 +50,7 @@ public class Account {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
 	private List<Order> orders;
 	
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
 	private List<Evaluate> evaluates;
 
@@ -153,6 +157,16 @@ public class Account {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	@PreRemove
+	private void preRemove() {
+		evaluates.forEach(e -> {
+			e.setAccount(null);
+		});
+		orders.forEach(o -> {
+			o.setAccount(null);
+		});
 	}
 
 }

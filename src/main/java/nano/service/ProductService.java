@@ -46,4 +46,6 @@ public interface ProductService {
 	List<ProductDTO> pageByFlowerOrEvent(Integer event, Integer flower, int pageNum);
 	
 	GetAllDTO<ProductDTO> searchByFlowerOrEvent(Integer event, Integer flower);
+
+	List<ProductDTO> top8NewProduct();
 }

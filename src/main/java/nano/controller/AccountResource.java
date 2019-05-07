@@ -40,14 +40,18 @@ public class AccountResource {
 		String token = service.login(dto.getUsername(), dto.getPassword());
 		HttpStatus httpStatus = null;
 		TokenDTO tokenDto = new TokenDTO();
-		if (!token.isEmpty()) {
-			httpStatus = HttpStatus.OK;
-			tokenDto.setTokenValue(token);
-			Account acc = service.getAccountByUsername(dto.getUsername());
-			tokenDto.setName(acc.getName() + " "  + acc.getSurname());
-			tokenDto.setRole(acc.getRole());
+		try {
+			if (!token.isEmpty()) {
+				httpStatus = HttpStatus.OK;
+				tokenDto.setTokenValue(token);
+				Account acc = service.getAccountByUsername(dto.getUsername());
+				tokenDto.setName(acc.getName() + " "  + acc.getSurname());
+				tokenDto.setRole(acc.getRole());
 
-		} else {
+			} else {
+				httpStatus = HttpStatus.ACCEPTED;
+			}
+		} catch (Exception e) {
 			httpStatus = HttpStatus.BAD_REQUEST;
 		}
 

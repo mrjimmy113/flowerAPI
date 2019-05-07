@@ -4,13 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostRemove;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Min;
@@ -57,13 +60,17 @@ public class Flower implements Serializable {
 	@Transient
 	private MultipartFile file;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "eventId")
 	private Event event;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "flower")
+	@OneToMany(mappedBy = "flower", cascade = CascadeType.REMOVE)
 	private List<ProductFlower> products = new ArrayList<ProductFlower>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "flower")
+	private List<FlowerImportDetail> imports = new ArrayList<FlowerImportDetail>();
 
 	public Integer getId() {
 		return id;
@@ -176,6 +183,13 @@ public class Flower implements Serializable {
 		dto.setPrice(price);
 		dto.setQuantity(quantity);
 		return dto;
+	}
+	
+	@PostRemove
+	private void postRemove() {
+		imports.forEach(i -> {
+			i.setFlower(null);
+		});
 	}
 
 	

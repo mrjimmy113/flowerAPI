@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PostRemove;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -45,8 +47,12 @@ public class Item implements Serializable {
 	private int quantity;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "item")
+	@OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
 	private List<ProductItem> products = new ArrayList<ProductItem>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "item")
+	private List<ItemImportDetail> imports;
 
 	
 
@@ -94,6 +100,14 @@ public class Item implements Serializable {
 		this.name = name;
 	}
 
+	public List<ItemImportDetail> getImports() {
+		return imports;
+	}
+
+	public void setImports(List<ItemImportDetail> imports) {
+		this.imports = imports;
+	}
+
 	@Override
 	public int hashCode() {
 		int hash = 3;
@@ -126,6 +140,13 @@ public class Item implements Serializable {
 		dto.setStock(this.quantity);
 		dto.setPrice(this.price);
 		return dto;
+	}
+	
+	@PostRemove
+	public void postRemove() {
+		imports.forEach(i -> {
+			i.setItem(null);
+		});
 	}
 
 }

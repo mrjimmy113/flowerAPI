@@ -1,5 +1,7 @@
 package nano.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +28,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	@Query("SELECT p from Product p "
 			+ "WHERE p.event.id = :event" )
 	Page<Product> findByEvent(@Param("event")Integer event, Pageable pageable);
+	
+	List<Product> findTop10ByOrderByCreatedDesc();
 }

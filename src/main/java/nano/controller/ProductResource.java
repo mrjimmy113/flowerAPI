@@ -28,6 +28,21 @@ public class ProductResource {
 	@Autowired
 	ProductService productService;
 
+	@GetMapping(value = "/newest")
+	public ResponseEntity<List<ProductDTO>> newestProduct() {
+		HttpStatus status = null;
+		List<ProductDTO> dto = null;
+		try {
+			dto = productService.top8NewProduct();
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<List<ProductDTO>>(dto,status);
+	}
+	
+	
+	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
 	public ResponseEntity<GetAllDTO<ProductDTO>> getAllProduct(@RequestParam String searchTerm) {

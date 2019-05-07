@@ -19,7 +19,7 @@ import nano.entity.Flower;
  * @author LENOVO
  */
 public interface FlowerService {
-    void remove(int id);
+    void remove(int id) throws IOException;
     Flower getById(int id);
     GetAllDTO<FlowerDTO> findAllFlower(String searchTerm);
     List<FlowerDTO> searchByNamePage(String name,int pageNum);

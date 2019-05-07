@@ -45,8 +45,13 @@ public class FlowerServiceImpl implements FlowerService {
 
 	@Transactional
 	@Override
-	public void remove(int id) {
-		rep.deleteById(id);
+	public void remove(int id) throws IOException {
+		Flower tmp = rep.findById(id).get();
+		if(tmp != null) {
+			GoogleStorageModule.delete(tmp.getFileName());
+			rep.deleteById(id);
+		}
+		
 	}
 
 	@Transactional(readOnly = true)
@@ -69,6 +74,7 @@ public class FlowerServiceImpl implements FlowerService {
 		flower.setContent(tmp.getImageUrl());
 		flower.setFileName(tmp.getFileName());
 		Event ev = eRep.findById(tmp.getEventId()).get();
+		System.out.println("Event Name" + ev.getName());
 		if(ev != null) flower.setEvent(ev);
 		if(file != null) {
 			String fileName = flower.getName().replaceAll("\\s+", "").toLowerCase()
@@ -89,6 +95,9 @@ public class FlowerServiceImpl implements FlowerService {
 		Flower flower = new Flower();
 		flower.setName(tmp.getName());
 		flower.setPrice(tmp.getPrice());
+		Event ev = eRep.findById(tmp.getEventId()).get();
+		System.out.println("Event Name" + ev.getName());
+		if(ev != null) flower.setEvent(ev);
 		String fileName = flower.getName().replaceAll("\\s+", "").toLowerCase()
 				+ (new java.util.Date().getTime());
 		flower.setFileName(fileName);
@@ -104,7 +113,10 @@ public class FlowerServiceImpl implements FlowerService {
 		GetAllDTO<FlowerDTO> dto = new GetAllDTO<FlowerDTO>();
 		List<FlowerDTO> dtos = new ArrayList<FlowerDTO>();
 		for (Flower item : page.getContent()) {
-			dtos.add(item.toDTO());
+			FlowerDTO fDTO = item.toDTO();
+			fDTO.setEventId(item.getEvent().getId());
+			dtos.add(fDTO);
+			
 		}
 		dto.setMaxPage(page.getTotalPages());
 		dto.setList(dtos);
@@ -117,7 +129,9 @@ public class FlowerServiceImpl implements FlowerService {
 		Page<Flower> page = rep.findByNameContaining(name, pageable);
 		List<FlowerDTO> dtos = new ArrayList<FlowerDTO>();
 		for (Flower item : page.getContent()) {
-			dtos.add(item.toDTO());
+			FlowerDTO fDTO = item.toDTO();
+			fDTO.setEventId(item.getEvent().getId());
+			dtos.add(fDTO);
 		}
 		return dtos;
 	}
