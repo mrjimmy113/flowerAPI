@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.PreRemove;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -60,6 +61,11 @@ public class ProductFlower {
 
 	public void setId(ProductFlowerId id) {
 		this.id = id;
+	}
+	
+	@PreRemove
+	public void preRemove() {
+		product.setPrice(0);
 	}
 	
 	

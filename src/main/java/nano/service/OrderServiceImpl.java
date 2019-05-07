@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.mail.MailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,6 +129,7 @@ public class OrderServiceImpl implements OrderService {
 		Order orders = new Order();
 		Account account = accRep.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 		for(OrderDetail orderDetail : order.getDetail()) {
+			if(orderDetail.getProduct().getPrice() == 0)throw new Exception("stock");
 			orderDetail.setOrder(orders);
 			for (ProductFlower pf : orderDetail.getProduct().getFlowers()) {
 				Flower f = fRep.findById(pf.getFlower().getId()).get();
