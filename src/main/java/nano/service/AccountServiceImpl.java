@@ -1,5 +1,6 @@
 package nano.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -148,17 +148,23 @@ public class AccountServiceImpl implements AccountService {
 		return false;
 	}
 
-	@PostFilter("filterObject.username != authentication.principal.username")
+	
 	@Override
 	public List<Account> searchByNamePage(String name, int pageNum) {
 		Pageable pageable = PageRequest.of(pageNum - 1, PAGEMAXSIZE);
 		Page<Account> page = repository.findByUsernameContaining(name, pageable);
 		List<Account> listAccount = page.getContent();
+		List<Account> returnList = new ArrayList<Account>();
 		for (Account account : listAccount) {
 			account.setPassword(null);
 			account.setOrders(null);
+			if(account.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+				continue;
+			}
+			returnList.add(account);
 		}
-		return listAccount;
+
+		return returnList;
 	}
 
 	
@@ -167,12 +173,17 @@ public class AccountServiceImpl implements AccountService {
 		Pageable pageable = PageRequest.of(0, PAGEMAXSIZE);
 		Page<Account> page = repository.findByUsernameContaining(searchTerm, pageable);
 		List<Account> listAccount = page.getContent();
+		List<Account> returnList = new ArrayList<Account>();
 		for (Account account : listAccount) {
 			account.setPassword(null);
 			account.setOrders(null);
+			if(account.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+				continue;
+			}
+			returnList.add(account);
 		}
 		GetAllDTO<Account> acc = new GetAllDTO<Account>();
-		acc.setList(this.searchByNamePage(searchTerm, 1));
+		acc.setList(returnList);
 		acc.setMaxPage(page.getTotalPages());
 		return acc;
 	}

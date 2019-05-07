@@ -68,7 +68,6 @@ public class AccountResource {
 			item = service.findAllItem(searchTerm);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			status = HttpStatus.BAD_REQUEST;
 			item = new GetAllDTO<Account>();
 			item.setList(new ArrayList<Account>());
