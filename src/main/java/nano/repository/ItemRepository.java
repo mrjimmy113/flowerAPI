@@ -11,4 +11,5 @@ import nano.entity.Item;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Integer> {
 	Page<Item> findByNameContaining(String name, Pageable pageable);
+	
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nano.dto.GetAllDTO;
+import nano.dto.ProductDTO;
 import nano.entity.Account;
 import nano.entity.Flower;
 import nano.entity.Item;
@@ -50,6 +51,9 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	HelperSendEmail helper;
 	
+	@Autowired
+	ProductService pSer;
+	
 
 	
 	@Override
@@ -66,11 +70,7 @@ public class OrderServiceImpl implements OrderService {
 		for (Order order : orders) {
 			Account acc = accRep.findByOrders(order);
 			acc.setOrders(null);
-			List<OrderDetail> details = dRep.findByOrder(order);
-			for (OrderDetail d : details) {
-				d.setOrder(null);
-			}
-			order.setDetail(details);
+			order.setDetail(null);
 			order.setAccount(acc);	
 		}
 		return page.getContent();
@@ -86,11 +86,7 @@ public class OrderServiceImpl implements OrderService {
 		for (Order order : orders) {
 			Account acc = accRep.findByOrders(order);
 			acc.setOrders(null);
-			List<OrderDetail> details = dRep.findByOrder(order);
-			for (OrderDetail d : details) {
-				d.setOrder(null);
-			}
-			order.setDetail(details);
+			order.setDetail(null);
 			order.setAccount(acc);
 		}
 		dto.setList(orders);
@@ -136,6 +132,7 @@ public class OrderServiceImpl implements OrderService {
 		orders.setPaymentType(order.getPaymentType());
 		orders.setShippedDate(order.getShippedDate());
 		orders.setShipAddress(order.getShipAddress());
+		orders = orderRepository.saveAndFlush(orders);
 		for(OrderDetail orderDetail : order.getDetail()) {
 			if(orderDetail.getProduct().getPrice() == 0)throw new Exception("stock");
 			orderDetail.setOrder(orders);
@@ -157,11 +154,9 @@ public class OrderServiceImpl implements OrderService {
 					iRep.save(i);
 				}
 			}
+			dRep.save(orderDetail);
 		}
-		orders.setDetail(order.getDetail());
-		System.out.println(order.getPaymentType());
-		System.out.println(orders.getPaymentType());
-		orderRepository.save(orders);
+		
 		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo(), order.getOrderStatus()); 
 	}
 	
@@ -180,11 +175,39 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public void cancelOrder(int id) {
+		List<OrderDetail> details = dRep.findByOrderId(id);
+		details.forEach(e -> {
+			ProductDTO p = pSer.getDetail(e.getProduct().getProductId());
+			p.getFlowers().forEach(pf -> {
+				Flower f = fRep.findById(pf.getFlower().getId()).get();
+				if(f != null) {
+					f.setQuantity(f.getQuantity() + (pf.getQuantity() * e.getQuantity()));
+					fRep.save(f);
+				}
+			});
+			p.getItems().forEach(pi -> {
+				Item i = iRep.findById(pi.getItem().getId()).get();
+				if(i != null) {
+					i.setQuantity(i.getQuantity() + (pi.getQuantity() * e.getQuantity()));
+					iRep.save(i);
+				}
+			});
+		});
 		Order tmp = orderRepository.findById(id).get();
 		tmp.setOrderStatus("CANCEL");
 		Account acc =accRep.findByOrderId(tmp.getOrderId()); 
 		orderRepository.save(tmp);
 		helper.sendEmailOrder(acc.getEmail(), tmp.getOrderNo(), tmp.getOrderStatus());
+	}
+	
+	@Override
+	public List<OrderDetail> getOrderDetaild(int id) {
+		List<OrderDetail> details = dRep.findByOrderIdFetchProduct(id);
+		details.forEach(d -> {
+			d.getProduct().setFlowers(null);
+			d.getProduct().setItems(null);
+		});
+		return details;
 	}
 	
 	

@@ -4,6 +4,7 @@ import java.util.List;
 
 import nano.dto.GetAllDTO;
 import nano.entity.Order;
+import nano.entity.OrderDetail;
 
 public interface OrderService  {
 	
@@ -16,4 +17,5 @@ public interface OrderService  {
 	void checkOut(Order order) throws Exception;
 	void completeOrder(int id);
 	void cancelOrder(int id);
+	List<OrderDetail> getOrderDetaild(int id);
 }

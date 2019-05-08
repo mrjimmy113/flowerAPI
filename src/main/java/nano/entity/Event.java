@@ -43,7 +43,7 @@ public class Event implements Serializable {
     private List<Product> products = new ArrayList<>();
     
     @JsonIgnore
-    @OneToMany(mappedBy = "event", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "event")
     private List<Flower> flowers = new ArrayList<>();
 
     public Integer getId() {

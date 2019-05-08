@@ -37,7 +37,7 @@ public class Product implements Serializable {
 	@Column(name="product_name")
 	private String productName;
 	
-	@Column(name="product_description")
+	@Column(name="product_description", columnDefinition = "LONGTEXT")
 	private String productDescription;
 	
 	@Column(name="image_url")
@@ -148,13 +148,7 @@ public class Product implements Serializable {
 		this.imageName = imageName;
 	}
 
-	public List<Evaluate> getEvaluates() {
-		return evaluates;
-	}
 
-	public void setEvaluates(List<Evaluate> evaluates) {
-		this.evaluates = evaluates;
-	}
 
 	@Override
 	public String toString() {

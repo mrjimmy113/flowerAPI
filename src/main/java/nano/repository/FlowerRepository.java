@@ -8,4 +8,5 @@ import nano.entity.Flower;
 
 public interface FlowerRepository extends JpaRepository<Flower, Integer>{
 	Page<Flower> findByNameContaining(String name, Pageable pageable);
+
 }

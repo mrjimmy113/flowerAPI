@@ -30,4 +30,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	Page<Product> findByEvent(@Param("event")Integer event, Pageable pageable);
 	
 	List<Product> findTop10ByOrderByCreatedDesc();
+	
+	
+	
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nano.dto.GetAllDTO;
 import nano.entity.Order;
+import nano.entity.OrderDetail;
 import nano.service.OrderService;
 
 
@@ -119,6 +120,21 @@ public class OrderResource {
 			status = HttpStatus.BAD_REQUEST;
 		}
 		return new ResponseEntity<Integer>(status.value(),status);
+	}
+	
+	@GetMapping("/orders/detail")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMP')")
+	public ResponseEntity<List<OrderDetail>> getOrderDetail(@RequestParam("id") Integer id) {
+		HttpStatus status = null;
+		List<OrderDetail> result = null;
+		try {
+			result = orderService.getOrderDetaild(id);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<List<OrderDetail>>(result,status);
 	}
 	
 }
