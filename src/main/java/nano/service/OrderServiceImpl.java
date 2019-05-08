@@ -157,7 +157,7 @@ public class OrderServiceImpl implements OrderService {
 			dRep.save(orderDetail);
 		}
 		
-		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo(), order.getOrderStatus()); 
+		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo(), orders.getOrderStatus()); 
 	}
 	
 	
