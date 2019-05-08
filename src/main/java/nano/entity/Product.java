@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import nano.dto.ProductDTO;
 
 @Entity
-@Table(name="product")
+@Table(name = "product")
 public class Product implements Serializable {
 
 	/**
@@ -30,47 +30,52 @@ public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="product_id")
-	private int productId;
-	
-	@Column(name="product_name")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "product_id")
+	private Integer productId;
+
+	@Column(name = "product_name")
 	private String productName;
-	
-	@Column(name="product_description", columnDefinition = "LONGTEXT")
+
+	@Column(name = "product_description", columnDefinition = "LONGTEXT")
 	private String productDescription;
-	
-	@Column(name="image_url")
+
+	@Column(name = "image_url")
 	private String imageUrl;
-	
+
 	@Column()
 	private String imageName;
-	
-	@Column(name="price")
+
+	@Column(name = "price")
 	private float price;
-	
-	@Column(name="created")	
+
+	@Column(name = "created")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date created;
-	
+
 	@ManyToOne()
-	@JoinColumn(name="eventId")
+	@JoinColumn(name = "eventId")
 	private Event event;
-	
+
 	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
 	private List<ProductFlower> flowers = new ArrayList<ProductFlower>();
-	
+
 	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
 	private List<ProductItem> items = new ArrayList<ProductItem>();
-	
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Evaluate> evaluates = new ArrayList<>();
-	
-	public Product() {}
 
-	public int getProductId() {
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private List<Evaluate> evaluates = new ArrayList<>();
+
+	public Product() {
+	}
+
+	public Integer getProductId() {
 		return productId;
-	}		
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
 
 	public List<ProductFlower> getFlowers() {
 		return flowers;
@@ -86,10 +91,6 @@ public class Product implements Serializable {
 
 	public void setItems(List<ProductItem> items) {
 		this.items = items;
-	}
-
-	public void setProductId(int productId) {
-		this.productId = productId;
 	}
 
 	public String getProductName() {
@@ -148,8 +149,6 @@ public class Product implements Serializable {
 		this.imageName = imageName;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "Product [productId=" + productId + ", productName=" + productName + ", productDescription="
@@ -157,9 +156,9 @@ public class Product implements Serializable {
 				+ ", created=" + created + ", event=" + event + ", flowers=" + flowers + ", items=" + items
 				+ ", evaluates=" + evaluates + "]";
 	}
-	
+
 	public ProductDTO toDTO() {
-		ProductDTO dto =new ProductDTO();
+		ProductDTO dto = new ProductDTO();
 		dto.setCreated(created);
 		dto.setEvaluates(evaluates);
 		dto.setEvent(event);
@@ -174,15 +173,5 @@ public class Product implements Serializable {
 		dto.setEvaluates(null);
 		return dto;
 	}
-	
-	
 
-
-	
-	
-	
-
-	
-	
 }
-	

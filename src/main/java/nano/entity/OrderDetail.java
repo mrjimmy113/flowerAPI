@@ -24,7 +24,7 @@ public class OrderDetail implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="order_details_id")
-	private int orderdetailsId;
+	private Integer orderdetailsId;
 	
 	@JsonIgnore
 	@ManyToOne
@@ -43,14 +43,13 @@ public class OrderDetail implements Serializable {
 	
 	@Transient
     private double total;
-			
-	public int getOrderdetailsId() {
+				
+	public Integer getOrderdetailsId() {
 		return orderdetailsId;
 	}
-	public void setOrderdetailsId(int orderdetailsId) {
+	public void setOrderdetailsId(Integer orderdetailsId) {
 		this.orderdetailsId = orderdetailsId;
-	}		
-	
+	}
 	public Order getOrder() {
 		return order;
 	}
