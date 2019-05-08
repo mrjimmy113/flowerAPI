@@ -32,7 +32,8 @@ public class OrderServiceImpl implements OrderService {
 	
 	private static final int PAGEMAXSIZE = 9;
 
-	private OrderRepository orderRepository;
+	@Autowired
+	OrderRepository orderRepository;
 	
 	@Autowired
 	AccountRepository accRep;
@@ -128,6 +129,13 @@ public class OrderServiceImpl implements OrderService {
 	public void checkOut(Order order) throws Exception { 
 		Order orders = new Order();
 		Account account = accRep.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+		orders.setAccount(account);
+		orders.setOrderDate(new Date());
+		orders.setOrderNo((new Date()).getTime());
+		orders.setOrderStatus("PROCESSING");
+		orders.setPaymentType(order.getPaymentType());
+		orders.setShippedDate(order.getShippedDate());
+		orders.setShipAddress(order.getShipAddress());
 		for(OrderDetail orderDetail : order.getDetail()) {
 			if(orderDetail.getProduct().getPrice() == 0)throw new Exception("stock");
 			orderDetail.setOrder(orders);
@@ -150,12 +158,9 @@ public class OrderServiceImpl implements OrderService {
 				}
 			}
 		}
-		orders.setAccount(account);
-		orders.setOrderDate(new Date());
-		orders.setOrderNo((new Date()).getTime());
-		orders.setOrderStatus("PROCESSING");
-		orders.setPaymentType(order.getPaymentType());
-		orders.setShippedDate(order.getShippedDate());
+		orders.setDetail(order.getDetail());
+		System.out.println(order.getPaymentType());
+		System.out.println(orders.getPaymentType());
 		orderRepository.save(orders);
 		helper.sendEmailOrder(account.getEmail(), orders.getOrderNo(), order.getOrderStatus()); 
 	}

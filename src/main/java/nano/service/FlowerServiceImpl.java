@@ -114,7 +114,10 @@ public class FlowerServiceImpl implements FlowerService {
 		List<FlowerDTO> dtos = new ArrayList<FlowerDTO>();
 		for (Flower item : page.getContent()) {
 			FlowerDTO fDTO = item.toDTO();
-			fDTO.setEventId(item.getEvent().getId());
+			Event ev = item.getEvent();
+			if(ev != null) {
+				fDTO.setEventId(item.getEvent().getId());
+			}
 			dtos.add(fDTO);
 			
 		}
@@ -130,7 +133,10 @@ public class FlowerServiceImpl implements FlowerService {
 		List<FlowerDTO> dtos = new ArrayList<FlowerDTO>();
 		for (Flower item : page.getContent()) {
 			FlowerDTO fDTO = item.toDTO();
-			fDTO.setEventId(item.getEvent().getId());
+			Event ev = item.getEvent();
+			if(ev != null) {
+				fDTO.setEventId(item.getEvent().getId());
+			}
 			dtos.add(fDTO);
 		}
 		return dtos;

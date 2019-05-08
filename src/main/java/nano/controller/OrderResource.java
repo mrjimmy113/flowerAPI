@@ -60,7 +60,9 @@ public class OrderResource {
 			orderService.checkOut(order);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
-			if(e.getMessage().equals("stock")) status = HttpStatus.ACCEPTED;
+			if(e.getMessage() != null) {
+				if(e.getMessage().equals("stock")) status = HttpStatus.ACCEPTED;
+			}
 			else status = HttpStatus.BAD_REQUEST;
 		}
 		return status.value();

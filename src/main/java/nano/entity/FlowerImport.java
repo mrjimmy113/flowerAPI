@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -28,7 +29,7 @@ public class FlowerImport {
 	@Column
 	private float total;
 	
-	@OneToMany(mappedBy = "flowerImport")
+	@OneToMany(mappedBy = "flowerImport", fetch = FetchType.EAGER)
 	private List<FlowerImportDetail> details;
 
 	public Integer getId() {

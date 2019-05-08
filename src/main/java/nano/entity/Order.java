@@ -27,7 +27,7 @@ public class Order implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="order_id")
-	private int orderId;
+	private Integer orderId;
 	
 	@ManyToOne
     @JoinColumn(name ="account_id")
@@ -65,12 +65,15 @@ public class Order implements Serializable {
 	public void setDetail(List<OrderDetail> detail) {
 		this.detail = detail;
 	}
-	public int getOrderId() {
+	
+	public Integer getOrderId() {
 		return orderId;
 	}
-	public void setOrderId(int orderId) {
+
+	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
-	}	
+	}
+
 	public Account getAccount() {
 		return account;
 	}
@@ -107,6 +110,16 @@ public class Order implements Serializable {
 
 	public void setOrderNo(long orderNo) {
 		this.orderNo = orderNo;
+	}
+	
+	
+
+	public String getShipAddress() {
+		return shipAddress;
+	}
+
+	public void setShipAddress(String shipAddress) {
+		this.shipAddress = shipAddress;
 	}
 
 	@Override
