@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PostRemove;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Min;
@@ -185,8 +185,8 @@ public class Flower implements Serializable {
 		return dto;
 	}
 	
-	@PostRemove
-	private void postRemove() {
+	@PreRemove
+	private void preRemove() {
 		imports.forEach(i -> {
 			i.setFlower(null);
 		});

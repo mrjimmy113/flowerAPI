@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.PostRemove;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -142,8 +142,8 @@ public class Item implements Serializable {
 		return dto;
 	}
 	
-	@PostRemove
-	public void postRemove() {
+	@PreRemove
+	public void preRemove() {
 		imports.forEach(i -> {
 			i.setItem(null);
 		});

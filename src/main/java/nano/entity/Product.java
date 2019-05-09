@@ -14,9 +14,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import nano.dto.ProductDTO;
 
@@ -65,6 +67,10 @@ public class Product implements Serializable {
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Evaluate> evaluates = new ArrayList<>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "product")
+	private List<OrderDetail> details = new ArrayList<OrderDetail>();
 
 	public Product() {
 	}
@@ -149,6 +155,16 @@ public class Product implements Serializable {
 		this.imageName = imageName;
 	}
 
+	public List<OrderDetail> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<OrderDetail> details) {
+		this.details = details;
+	}
+	
+	
+
 	@Override
 	public String toString() {
 		return "Product [productId=" + productId + ", productName=" + productName + ", productDescription="
@@ -172,6 +188,13 @@ public class Product implements Serializable {
 		dto.setItems(null);
 		dto.setEvaluates(null);
 		return dto;
+	}
+	
+	@PreRemove
+	public void preRemove() {
+		details.forEach(d -> {
+			d.setProduct(null);
+		});
 	}
 
 }
